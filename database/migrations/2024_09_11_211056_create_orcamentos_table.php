@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('orcamentos', function (Blueprint $table) {
             $table->id();
+            $table->float('desconto')->nullable(true);
+            $table->float('custo_final')->nullable(false);
+            $table->float('valor_final')->nullable(false);
+            $table->date('previsao_inicio')->nullable(false);
+            $table->date('previsao_entrega')->nullable(false);
+            $table->date('validade')->nullable(false);
+            $table->foreignId('cliente_id')->constrained('clientes');
             $table->timestamps();
         });
     }

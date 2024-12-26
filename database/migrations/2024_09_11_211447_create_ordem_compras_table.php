@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('ordem_compras', function (Blueprint $table) {
             $table->id();
+            $table->float('valor_total')->nullable(false);
+            $table->string('nota_fiscal')->nullable(true);
+            $table->date('data_emissao')->nullable(false);
+            $table->date('data_entrega')->nullable(false);
+            $table->foreignId('fornecedor_id')->constrained('fornecedores')->nullable(false);
             $table->timestamps();
         });
     }

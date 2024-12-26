@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('servicos', function (Blueprint $table) {
+        Schema::create('perdas_quebras', function (Blueprint $table) {
             $table->id();
-            $table->string('descricao')->nullable(false);
             $table->integer('qtde')->nullable(false);
-            $table->float('valor')->nullable(false);
-            $table->float('custo')->nullable(false);
-            $table->time('tempo_realizacao')->nullable(false);
-            $table->boolean('ativo')->nullable(false);
+            $table->date('data')->nullable(false);
+            $table->foreignId('componente_servico_id')->constrained('componente_servicos')->nullable(true);
+            $table->foreignId('ordem_servico_id')->constrained('ordem_servicos')->nullable(true);
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('servicos');
+        Schema::dropIfExists('perdas_quebras');
     }
 };

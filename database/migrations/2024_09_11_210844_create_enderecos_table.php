@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('enderecos', function (Blueprint $table) {
             $table->id();
+            $table->enum('tipo', ['residencial', 'comercial'])->nullable(true);
+            $table->string('logradouro')->nullable(true);
+            $table->string('nome_via')->nullable(true);
+            $table->string('numero')->nullable(true);
+            $table->string('complemento')->nullable(true);
+            $table->string('bairro')->nullable(true);
+            $table->string('cidade')->nullable(true);
+            $table->string('estado')->nullable(true);
+            $table->string('cep')->nullable(true);
             $table->timestamps();
         });
     }

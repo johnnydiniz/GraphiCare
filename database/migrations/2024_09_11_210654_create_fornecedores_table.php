@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('contatos', function (Blueprint $table) {
+        Schema::create('fornecedores', function (Blueprint $table) {
             $table->id();
+            $table->enum('tipo', ['produtos', 'servicos', 'produtos_servicos'])->nullable(false);
+            $table->foreignKey('pessoa_id')->constrained('pessoas');
             $table->timestamps();
         });
     }
@@ -22,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('contatos');
+        Schema::dropIfExists('fornecedors');
     }
 };

@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('ordem_servicos', function (Blueprint $table) {
             $table->id();
+            $table->float('desconto')->nullable(true);
+            $table->float('custo_final')->nullable(false);
+            $table->float('valor_final')->nullable(false);
+            $table->date('data_inicio')->nullable(true);
+            $table->date('data_fim')->nullable(true);
+            $table->enum('tipo_entrega', ['retirada', 'entrega'])->nullable(false);
+            $table->date('data_entrega')->nullable(true);
+            $table->foreignId('orcamento_id')->constrained('orcamentos')->nullable(true);
             $table->timestamps();
         });
     }

@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('funcionarios', function (Blueprint $table) {
             $table->id();
+            $table->string('cargo')->nullable(true);
+            $table->float('salario')->nullable(true);
+            $table->foreignKey('pessoas_id')->constrained('pessoas');
             $table->timestamps();
         });
     }

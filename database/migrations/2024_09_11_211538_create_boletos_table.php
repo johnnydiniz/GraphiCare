@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tipo_materia_primas', function (Blueprint $table) {
+        Schema::create('boletos', function (Blueprint $table) {
             $table->id();
+            $table->date('data_emissao')->nullable(false);
+            $table->date('data_vencimento')->nullable(false);
+            $table->float('valor')->nullable(false);
+            $table->foreignId('ordem_compra_id')->constrained('ordem_compras');
             $table->timestamps();
         });
     }
@@ -22,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tipo_materia_primas');
+        Schema::dropIfExists('boletos');
     }
 };

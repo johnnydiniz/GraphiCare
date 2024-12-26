@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('faturas', function (Blueprint $table) {
             $table->id();
+            $table->date('data_emissao')->nullable(false);
+            $table->date('data_vencimento')->nullable(false);
+            $table->float('valor')->nullable(false);
+            $table->foreignId('ordem_servico_id')->constrained('ordem_servicos');
             $table->timestamps();
         });
     }
