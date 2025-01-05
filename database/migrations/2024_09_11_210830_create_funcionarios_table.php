@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('cargo')->nullable(true);
             $table->float('salario')->nullable(true);
-            $table->foreignId('pessoas_id')->constrained('pessoas');
+            $table->foreignId('pessoa_id')->constrained('pessoas');
             $table->timestamps();
         });
     }
