@@ -16,7 +16,7 @@ return new class extends Migration
             $table->enum('tipo', ['final', 'representante'])->nullable(false);
             $table->float('limite_credito')->nullable(false);
             $table->float('taxa_desconto')->nullable(false);
-            $table->foreignKey('pessoas_id')->constrained('pessoas');
+            $table->foreignId('pessoas_id')->constrained('pessoas');
             $table->timestamps();
         });
     }

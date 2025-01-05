@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('fornecedores', function (Blueprint $table) {
             $table->id();
             $table->enum('tipo', ['produtos', 'servicos', 'produtos_servicos'])->nullable(false);
-            $table->foreignKey('pessoa_id')->constrained('pessoas');
+            $table->foreignId('pessoa_id')->constrained('pessoas');
             $table->timestamps();
         });
     }

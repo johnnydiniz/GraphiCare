@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('qtde')->nullable(false);
             $table->float('valor_unitario')->nullable(false);
-            $table->foreignId('materia_prima_id')->constrained('materia_primas')->nullable(true);
+            $table->foreignId('materia_prima_id')->constrained('materias_primas')->nullable(true);
             $table->foreignId('ordem_compra_id')->constrained('ordem_compras')->nullable(false);
             $table->timestamps();
         });
