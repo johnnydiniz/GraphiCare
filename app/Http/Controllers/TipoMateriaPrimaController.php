@@ -1,9 +1,10 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\TipoMateriaPrima;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class TipoMateriaPrimaController extends Controller
 {
@@ -28,7 +29,34 @@ class TipoMateriaPrimaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'descricao' => 'required|string|unique:tipo_materias_primas',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors()->get('descricao'),
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        DB::beginTransaction();
+
+        try {
+
+            $tipoMateriaPrima = TipoMateriaPrima::create([
+                'ativo'                 => true,
+                'descricao'             => $request->descricao,
+            ]);
+
+            DB::commit();
+            return response()->json(['success' => 'Tipo de matéria prima cadastrado com sucesso.', 'id' => $tipoMateriaPrima->id], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => $validator->errors()->get('descricao'),
+                'errors' => $validator->errors()
+            ], 422);
+        }
     }
 
     /**

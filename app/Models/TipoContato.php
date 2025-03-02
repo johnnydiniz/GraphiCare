@@ -8,4 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class TipoContato extends Model
 {
     use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'descricao',
+        'ativo',
+    ];
+
+    protected $table = 'tipo_contatos';
 }
