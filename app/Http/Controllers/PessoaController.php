@@ -2,6 +2,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use App\Models\Contato;
+use App\Models\Endereco;
 use App\Models\Fornecedor;
 use App\Models\Funcionario;
 use App\Models\Pessoa;
@@ -36,14 +38,18 @@ class PessoaController extends Controller
     public function store(Request $request)
     {
 
-        $temFuncionario = $temCliente = $temFornecedor = false;
+        $temFuncionario = $temCliente = $temFornecedor = $temContato = $temEndereco = false;
 
         //Validação de campos específicos de pessoa
         $validator = Validator::make($request->all(), [
-            'login'         => 'required|string|max:255|unique:pessoas',
-            'cpf_cnpj'      => 'string|max:14|unique:pessoas',
-            'nome_registro' => 'required|string|max:255',
-            'senha'         => 'required|string|min:8',
+            'tipo'            => 'required|in:cliente,funcionario,fornecedor',
+            'login'           => 'required|string|max:255|unique:pessoas',
+            'senha'           => 'required|string|min:8',
+            'cpf_cnpj'        => 'string|max:14|unique:pessoas',
+            'nome_registro'   => 'required|string|max:255',
+            'nome_social'     => 'string|max:255',
+            'data_nascimento' => 'date',
+            'escolaridade'    => 'in:ensino_fundamental,ensino_medio,ensino_superior',
         ]);
 
         if ($validator->fails()) {
@@ -51,12 +57,44 @@ class PessoaController extends Controller
             return back()->with($fields)->withErrors($validator);
         }
 
-        //Validação de campos específicos de funcionário
-        if (! empty($request->cargo) || ! empty($request->salario)) {
-            $temFuncionario = true;
-            $validator      = Validator::make($request->all(), [
-                'cargo'   => 'string|max:255',
-                'salario' => 'numeric',
+        //Validação de campos específicos de contato
+        if (! empty($request->tipo_contato) && ! empty($request->contato)) {
+            $temContato = true;
+            $validator  = Validator::make($request->all(), [
+                'tipo_contato' => 'required|string|max:255',
+                'contato'      => 'required|string|max:255',
+            ]);
+
+            if ($validator->fails()) {
+                $fields = $this->generateSessionFields($request);
+                return back()->with($fields)->withErrors($validator);
+            }
+        }
+
+        //Validação de campos específicos de endereço
+        if (! empty($request->cep)) {
+            $temEndereco = true;
+            $validator   = Validator::make($request->all(), [
+                'cep'         => 'required|string|max:8',
+                'logradouro'  => 'required|string|max:255',
+                'numero'      => 'required|string|max:255',
+                'complemento' => 'string|max:255',
+                'bairro'      => 'required|string|max:255',
+                'cidade'      => 'required|string|max:255',
+                'estado'      => 'required|string|max:255',
+            ]);
+
+            if ($validator->fails()) {
+                $fields = $this->generateSessionFields($request);
+                return back()->with($fields)->withErrors($validator);
+            }
+        }
+
+        //Validação de campos específicos de fornecedor
+        if (! empty($request->tipo_fornecedor) && $request->tipo_fornecedor != 'nao_informado') {
+            $temFornecedor = true;
+            $validator     = Validator::make($request->all(), [
+                'tipo_fornecedor' => 'in:produtos,servicos,produtos_servicos',
             ]);
 
             if ($validator->fails()) {
@@ -69,10 +107,9 @@ class PessoaController extends Controller
         if (! empty($request->tipo_cliente) && $request->tipo_cliente != 'nao_informado') {
             $temCliente = true;
             $validator  = Validator::make($request->all(), [
-                'tipo_cliente'  => 'required|string|max:255|unique:pessoas',
-                'cpf_cnpj'      => 'string|max:14|unique:pessoas',
-                'nome_registro' => 'required|string|max:255',
-                'senha'         => 'required|string|min:8',
+                'tipo_cliente'   => 'in:final,representante',
+                'limite_credito' => 'numeric',
+                'taxa_desconto'  => 'numeric',
             ]);
 
             if ($validator->fails()) {
@@ -81,14 +118,12 @@ class PessoaController extends Controller
             }
         }
 
-        //Validação de campos específicos de fornecedor
-        if (! empty($request->tipo_cliente) && $request->tipo_cliente != 'nao_informado') {
-            $temFornecedor = true;
-            $validator     = Validator::make($request->all(), [
-                'tipo_fornecedor' => 'required|string|max:255|unique:pessoas',
-                'cpf_cnpj'        => 'string|max:14|unique:pessoas',
-                'nome_registro'   => 'required|string|max:255',
-                'senha'           => 'required|string|min:8',
+        //Validação de campos específicos de funcionário
+        if (! empty($request->cargo) || ! empty($request->salario)) {
+            $temFuncionario = true;
+            $validator      = Validator::make($request->all(), [
+                'cargo'   => 'string|max:255',
+                'salario' => 'numeric',
             ]);
 
             if ($validator->fails()) {
@@ -112,10 +147,26 @@ class PessoaController extends Controller
                 'escolaridade'    => $request->escolaridade,
             ]);
 
-            $temFuncionario ?? Funcionario::create([
+            $temContato ?? Contato::create([
+                'pessoa_id'    => $pessoa->id,
+                'tipo_contato' => $request->tipo_contato,
+                'contato'      => $request->contato,
+            ]);
+
+            $temEndereco ?? Endereco::create([
+                'pessoa_id'   => $pessoa->id,
+                'cep'         => $request->cep,
+                'logradouro'  => $request->logradouro,
+                'numero'      => $request->numero,
+                'complemento' => $request->complemento,
+                'bairro'      => $request->bairro,
+                'cidade'      => $request->cidade,
+                'estado'      => $request->estado,
+            ]);
+
+            $temFornecedor ?? Fornecedor::create([
                 'pessoa_id' => $pessoa->id,
-                'cargo'     => $request->cargo,
-                'salario'   => $request->salario,
+                'tipo'      => $request->tipo_fornecedor,
             ]);
 
             $temCliente ?? Cliente::create([
@@ -125,9 +176,10 @@ class PessoaController extends Controller
                 'taxa_desconto'  => $request->taxa_desconto,
             ]);
 
-            $temFornecedor ?? Fornecedor::create([
+            $temFuncionario ?? Funcionario::create([
                 'pessoa_id' => $pessoa->id,
-                'tipo'      => $request->tipo_fornecedor,
+                'cargo'     => $request->cargo,
+                'salario'   => $request->salario,
             ]);
 
             DB::commit();
@@ -161,22 +213,87 @@ class PessoaController extends Controller
      */
     public function update(Request $request, Pessoa $pessoa)
     {
+
         DB::beginTransaction();
-        $pessoa = $pessoa->load('pessoa');
 
         try {
 
-            $pessoa->pessoa->update([
-                'nome_registro' => $request->nome_registro,
-                'nome_social'   => $request->nome_social ?? $request->nome_registro,
-                'login'         => $request->login,
-                'senha'         => $request->senha ? bcrypt($request->senha) : $pessoa->pessoa->senha,
-                'cpf_cnpj'      => $request->cpf_cnpj,
+            $pessoa->update([
+                'ativo'           => $request->ativo,
+                'tipo'            => $request->tipo,
+                'login'           => $request->login,
+                'senha'           => $request->senha ? bcrypt($request->senha) : $pessoa->senha,
+                'cpf_cnpj'        => $request->cpf_cnpj,
+                'nome_registro'   => $request->nome_registro,
+                'nome_social'     => $request->nome_social ?? $request->nome_registro,
+                'data_nascimento' => $request->data_nascimento,
+                'escolaridade'    => $request->escolaridade,
             ]);
 
-            $pessoa->update([
-                'cargo' => $request->cargo,
-            ]);
+            if (! empty($request->tipo_contato) && ! empty($request->contato)) {
+                ! is_null($pessoa->contatos) ? $pessoa->contatos->each->update([
+                    'tipo_contato' => $request->tipo_contato,
+                    'contato'      => $request->contato,
+                ]) : Contato::create([
+                    'pessoa_id'    => $pessoa->id,
+                    'tipo_contato' => $request->tipo_contato,
+                    'contato'      => $request->contato,
+                ]);
+            }
+
+            if (! empty($request->cep)) {
+                ! is_null($pessoa->enderecos) ? $pessoa->enderecos->each->update([
+                    'cep'         => $request->cep,
+                    'logradouro'  => $request->logradouro,
+                    'numero'      => $request->numero,
+                    'complemento' => $request->complemento,
+                    'bairro'      => $request->bairro,
+                    'cidade'      => $request->cidade,
+                    'estado'      => $request->estado,
+                ]) : Endereco::create([
+                    'pessoa_id'   => $pessoa->id,
+                    'cep'         => $request->cep,
+                    'logradouro'  => $request->logradouro,
+                    'numero'      => $request->numero,
+                    'complemento' => $request->complemento,
+                    'bairro'      => $request->bairro,
+                    'cidade'      => $request->cidade,
+                    'estado'      => $request->estado,
+                ]);
+            }
+
+            if (! empty($request->tipo_fornecedor) && $request->tipo_fornecedor != 'nao_informado') {
+                ! is_null($pessoa->fornecedor) ? $pessoa->fornecedor->update([
+                    'tipo' => $request->tipo_fornecedor,
+                ]) : Fornecedor::create([
+                    'pessoa_id' => $pessoa->id,
+                    'tipo'      => $request->tipo_fornecedor,
+                ]);
+            }
+
+            if (! empty($request->tipo_cliente) && $request->tipo_cliente != 'nao_informado') {
+                ! is_null($pessoa->cliente) ? $pessoa->cliente->update([
+                    'tipo'           => $request->tipo_cliente,
+                    'limite_credito' => $request->limite_credito,
+                    'taxa_desconto'  => $request->taxa_desconto,
+                ]) : Cliente::create([
+                    'pessoa_id'      => $pessoa->id,
+                    'tipo'           => $request->tipo_cliente,
+                    'limite_credito' => $request->limite_credito,
+                    'taxa_desconto'  => $request->taxa_desconto,
+                ]);
+            }
+
+            if (! empty($request->cargo) || ! empty($request->salario)) {
+                ! is_null($pessoa->funcionario) ? $pessoa->funcionario->update([
+                    'cargo'   => $request->cargo,
+                    'salario' => $request->salario,
+                ]) : Funcionario::create([
+                    'pessoa_id' => $pessoa->id,
+                    'cargo'     => $request->cargo,
+                    'salario'   => $request->salario,
+                ]);
+            }
 
             DB::commit();
             return redirect()->route('pessoa.index')->with('success', 'Alterações efetuadas com sucesso.');
@@ -203,6 +320,12 @@ class PessoaController extends Controller
             if (! is_null($pessoa->funcionario)) {
                 $pessoa->funcionario->delete();
             }
+            if (! is_null($pessoa->contatos)) {
+                $pessoa->contatos->each->delete();
+            }
+            if (! is_null($pessoa->enderecos)) {
+                $pessoa->enderecos->each->delete();
+            }
             $pessoa->delete();
             DB::commit();
             return redirect()->route('pessoa.index')->with('success', 'Pessoa excluída com sucesso.');
@@ -215,12 +338,28 @@ class PessoaController extends Controller
     public function generateSessionFields(Request $request)
     {
         $fields = [
-            'nome_registro' => $request->nome_registro,
-            'nome_social'   => $request->nome_social ?? null,
-            'login'         => $request->login,
-            'cpf_cnpj'      => $request->cpf_cnpj,
-            'cargo'         => $request->cargo,
+            'tipo'            => $request->tipo,
+            'login'           => $request->login,
+            'cpf_cnpj'        => $request->cpf_cnpj,
+            'nome_registro'   => $request->nome_registro,
+            'nome_social'     => $request->nome_social ?? null,
+            'data_nascimento' => $request->data_nascimento,
+            'escolaridade'    => $request->escolaridade,
+            'cep'             => $request->cep,
+            'logradouro'      => $request->logradouro,
+            'numero'          => $request->numero,
+            'complemento'     => $request->complemento,
+            'bairro'          => $request->bairro,
+            'cidade'          => $request->cidade,
+            'estado'          => $request->estado,
+            'tipo_fornecedor' => $request->tipo_fornecedor,
+            'tipo_cliente'    => $request->tipo_cliente,
+            'limite_credito'  => $request->limite_credito,
+            'taxa_desconto'   => $request->taxa_desconto,
+            'cargo'           => $request->cargo,
+            'salario'         => $request->salario,
         ];
+
         return $fields;
     }
 }

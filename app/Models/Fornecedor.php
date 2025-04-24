@@ -29,7 +29,7 @@ class Fornecedor extends Model
     public function generateFields(String $function)
     {
         $fields = [
-            ['name' => 'tipo_fornecedor', 'label' => 'Tipo de Fornecedor', 'type' => 'select', 'options' => ['nao_informado' => 'Não informado', 'produtos' => 'Produtos', 'servicos' => 'Serviços', 'produtos_servicos' => 'Produtos e Serviços'], 'selected' => $this->tipo ?? 'produtos'],
+            ['name' => 'tipo_fornecedor', 'label' => 'Tipo de Fornecedor', 'type' => 'select', 'options' => ['nao_informado' => 'Não informado', 'produtos' => 'Produtos', 'servicos' => 'Serviços', 'produtos_servicos' => 'Produtos e Serviços'], 'selected' => $this->tipo ?? 'nao_informado'],
         ];
 
         return $fields;

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('previsao_entrega')->nullable(false);
             $table->date('validade')->nullable(false);
             $table->foreignId('cliente_id')->constrained('clientes');
+            $table->boolean('ativo')->default(true)->nullable(false);
             $table->timestamps();
         });
     }

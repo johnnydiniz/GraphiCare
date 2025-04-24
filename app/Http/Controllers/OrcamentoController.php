@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Orcamento;
 use Illuminate\Http\Request;
+use NumberFormatter;
 
 class OrcamentoController extends Controller
 {
@@ -12,7 +13,9 @@ class OrcamentoController extends Controller
      */
     public function index()
     {
-        //
+        $formatter = new NumberFormatter('pt_BR',  NumberFormatter::CURRENCY);
+        $orcamentos = Orcamento::all();
+        return view('orcamento.index', compact('orcamentos', 'formatter'));
     }
 
     /**
@@ -20,7 +23,8 @@ class OrcamentoController extends Controller
      */
     public function create()
     {
-        //
+        $fields = (new Orcamento())->generateFields(__FUNCTION__);
+        return view('orcamento.formulario', ['title' => 'Cadastrar Orçamento', 'route' => 'orcamento.inserir', 'fields' => $fields, 'btn_label' => 'Cadastrar']);
     }
 
     /**
@@ -44,7 +48,8 @@ class OrcamentoController extends Controller
      */
     public function edit(Orcamento $orcamento)
     {
-        //
+        $fields = $orcamento->generateFields(__FUNCTION__);
+        return view('orcamento.formulario', ['title' => 'Editar Matéria-prima', 'route' => ['orcamento.editar', $orcamento->id] , 'fields' => $fields, 'btn_label' => 'Salvar']);
     }
 
     /**

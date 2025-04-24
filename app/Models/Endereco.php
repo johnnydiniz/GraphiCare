@@ -28,4 +28,12 @@ class Endereco extends Model
 
         return $fields;
     }
+
+    /**
+     * The relation to the pessoa
+     */
+    public function pessoa()
+    {
+        return $this->hasOne(Pessoa::class);
+    }
 }

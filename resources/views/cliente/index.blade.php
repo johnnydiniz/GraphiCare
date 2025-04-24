@@ -32,11 +32,11 @@ Clientes
                     <div class="col">
                         <a class="btn btn-sm btn-warning" href="{{ route('cliente.editar', $cliente->id) }}"><span style="font-size: 12px"><i class="fa-solid fa-user-pen"></i></span></a>
                         <a class="btn btn-sm btn-danger" onclick="event.preventDefault();
-                            document.getElementById('excluir-form').submit();">
+                            document.getElementById('excluir-form-{{ $cliente->id }}').submit();">
                             <span style="font-size: 12px"><i class="fa-solid fa-trash"></span></i>
                         </a>
 
-                        <form id="excluir-form" action="{{ route('cliente.excluir', $funcionario->id) }}" method="POST" class="d-none">
+                        <form id="excluir-form-{{ $cliente->id }}" action="{{ route('cliente.excluir', $funcionario->id) }}" method="POST" class="d-none">
                             @csrf
                             @method('DELETE')
                         </form>

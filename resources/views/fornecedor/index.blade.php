@@ -35,11 +35,11 @@ Clientes
                     <div class="col">
                         <a class="btn btn-sm btn-warning" href="{{ route('fornecedor.editar', $fornecedor->id) }}"><span style="font-size: 12px"><i class="fa-solid fa-user-pen"></i></span></a>
                         <a class="btn btn-sm btn-danger" onclick="event.preventDefault();
-                                                        document.getElementById('excluir-form').submit();">
+                                                        document.getElementById('excluir-form-{{ $fornecedor->id }}').submit();">
                             <span style="font-size: 12px"><i class="fa-solid fa-trash"></span></i>
                         </a>
 
-                        <form id="excluir-form" action="{{ route('fornecedor.excluir', $fornecedor->id) }}" method="POST" class="d-none">
+                        <form id="excluir-form-{{ $fornecedor->id }}" action="{{ route('fornecedor.excluir', $fornecedor->id) }}" method="POST" class="d-none">
                             @csrf
                             @method('DELETE')
                         </form>

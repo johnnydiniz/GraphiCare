@@ -21,6 +21,7 @@ return new class extends Migration
             $table->enum('tipo_entrega', ['retirada', 'entrega'])->nullable(false);
             $table->date('data_entrega')->nullable(true);
             $table->foreignId('orcamento_id')->constrained('orcamentos')->nullable(true);
+            $table->boolean('ativo')->default(true)->nullable(false);
             $table->timestamps();
         });
     }

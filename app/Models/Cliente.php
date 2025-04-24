@@ -27,7 +27,7 @@ class Cliente extends Model
     public function generateFields(String $function)
     {
         $fields = [
-            ['name' => 'tipo_cliente', 'label' => 'Tipo', 'type' => 'select', 'options' => ['nao_informado' => 'Não informado', 'final' => 'Final', 'representante' => 'Representante'], 'selected' => $this->tipo ?? 'final'],
+            ['name' => 'tipo_cliente', 'label' => 'Tipo', 'type' => 'select', 'options' => ['nao_informado' => 'Não informado', 'final' => 'Final', 'representante' => 'Representante'], 'selected' => $this->tipo ?? 'nao_informado'],
             ['name' => 'limite_credito', 'label' => 'Limite de Crédito', 'type' => 'number', 'value' => $this->limite_credito ?? null],
             ['name' => 'taxa_desconto', 'label' => 'Taxa de Desconto', 'type' => 'number', 'value' => $this->taxa_desconto ?? null],
         ];

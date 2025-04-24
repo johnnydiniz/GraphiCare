@@ -18,7 +18,7 @@ return new class extends Migration
             $table->float('estoque_atual')->nullable(false);
             $table->float('estoque_minimo')->nullable(true);
             $table->boolean('aviso_estoque')->nullable(true);
-            $table->boolean('ativo')->nullable(false);
+            $table->boolean('ativo')->default(true)->nullable(false);
             $table->foreignId('tipo_materia_prima_id')->constrained('tipo_materias_primas');
             $table->timestamps();
         });

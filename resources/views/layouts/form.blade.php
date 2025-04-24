@@ -52,9 +52,10 @@
                                 <div>
                                     <input type="text" id="descricao" name="descricao">
                                 </div>
-                                <hr></hr>
+                                <hr>
+                                </hr>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                <button type="button" class="btn btn-primary btn-modal" data-routing="{{ $field['action'] }}" data-select="#{{ $field['name'] }}">Cadastrar</button>                                
+                                <button type="button" class="btn btn-primary btn-modal" data-routing="{{ $field['action'] }}" data-select="#{{ $field['name'] }}">Cadastrar</button>
                             </div>
                         </div>
                     </div>
@@ -109,7 +110,7 @@
             </div>
             @elseif($field['type'] == 'number')
             <div>
-                <input id="{{ $field['name'] }}" type="{{ $field['type'] }}" name="{{ $field['name'] }}" value="{{ session()->get($field['name']) ?? $field['value'] }}" @if (!empty($field['required'])) required="true" @endif autofocus>
+                <input id="{{ $field['name'] }}" type="{{ $field['type'] }}" name="{{ $field['name'] }}" value="{{ session()->get($field['name']) ?? $field['value'] }}" @if (!empty($field['required'])) required="true" @endif @if(!empty($field['min'])) min="{{ $field['min'] }}" @endif @if(!empty($field['max'])) max="{{ $field['max'] }}" @endif @if(!empty($field['step'])) step="{{ $field['step'] }}" @endif autofocus>
 
                 @error($field["name"])
                 <span>{{ $message }}</span>
@@ -118,6 +119,14 @@
             @elseif($field['type'] == 'file')
             <div>
                 <input id="{{ $field['name'] }}" type="{{ $field['type'] }}" name="{{ $field['name'] }}" @if (!empty($field['required'])) required="true" @endif autofocus>
+
+                @error($field["name"])
+                <span>{{ $message }}</span>
+                @enderror
+            </div>
+            @elseif($field['type'] == 'time')
+            <div>
+                <input id="{{ $field['name'] }}" type="{{ $field['type'] }}" name="{{ $field['name'] }}" value="{{ session()->get($field['name']) ?? $field['value'] }}" @if (!empty($field['required'])) required="true" @endif autofocus>
 
                 @error($field["name"])
                 <span>{{ $message }}</span>

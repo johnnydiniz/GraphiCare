@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tipo_materias_primas', function (Blueprint $table) {
+        Schema::create('servicos_orcamentos', function (Blueprint $table) {
             $table->id();
-            $table->string('descricao')->nullable(false)->unique();
-            $table->boolean('ativo')->default(true)->nullable(false);
+            $table->foreignId('servico_id')->constrained('servicos')->nullable(false);
+            $table->foreignId('orcamento_id')->constrained('orcamentos')->nullable(false);
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tipo_materias_primas');
+        Schema::dropIfExists('servico_orcamento');
     }
 };

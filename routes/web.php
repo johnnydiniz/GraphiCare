@@ -16,7 +16,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pessoa/editar/{pessoa}', 'App\Http\Controllers\PessoaController@edit')->name('pessoa.editar');
     Route::put('/pessoa/editar/{pessoa}', 'App\Http\Controllers\PessoaController@update')->name('pessoa.editar');
     Route::delete('/pessoa/excluir/{pessoa}', 'App\Http\Controllers\PessoaController@destroy')->name('pessoa.excluir');
-    
+
+    //Tipos de contatos
+    Route::get('/tipo-contato', 'App\Http\Controllers\TipoContatoController@index')->name('tipo-contato.index');
+    Route::get('/tipo-contato/visualizar', 'App\Http\Controllers\TipoContatoController@show')->name('tipo-contato.visualizar');
+    Route::get('/tipo-contato/inserir', 'App\Http\Controllers\TipoContatoController@create')->name('tipo-contato.inserir');
+    Route::post('/tipo-contato/inserir', 'App\Http\Controllers\TipoContatoController@store')->name('tipo-contato.inserir');
+    Route::get('/tipo-contato/editar/{tipoContato}', 'App\Http\Controllers\TipoContatoController@edit')->name('tipo-contato.editar');
+    Route::put('/tipo-contato/editar/{tipoContato}', 'App\Http\Controllers\TipoContatoController@update')->name('tipo-contato.editar');
+    Route::delete('/tipo-contato/excluir/{tipoContato}', 'App\Http\Controllers\TipoContatoController@destroy')->name('tipo-contato.excluir');
+        
     //Funcionário
     Route::get('/funcionario', 'App\Http\Controllers\FuncionarioController@index')->name('funcionario.index');
     Route::get('/funcionario/visualizar', 'App\Http\Controllers\FuncionarioController@show')->name('funcionario.visualizar');
@@ -62,15 +71,38 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/tipo-materia-prima/editar/{tipoMateriaPrima}', 'App\Http\Controllers\TipoMateriaPrimaController@update')->name('tipo-materia-prima.editar');
     Route::delete('/tipo-materia-prima/excluir/{tipoMateriaPrima}', 'App\Http\Controllers\TipoMateriaPrimaController@destroy')->name('tipo-materia-prima.excluir');
     
-    //Tipos de contatos
-    Route::get('/tipo-contato', 'App\Http\Controllers\TipoContatoController@index')->name('tipo-contato.index');
-    Route::get('/tipo-contato/visualizar', 'App\Http\Controllers\TipoContatoController@show')->name('tipo-contato.visualizar');
-    Route::get('/tipo-contato/inserir', 'App\Http\Controllers\TipoContatoController@create')->name('tipo-contato.inserir');
-    Route::post('/tipo-contato/inserir', 'App\Http\Controllers\TipoContatoController@store')->name('tipo-contato.inserir');
-    Route::get('/tipo-contato/editar/{tipoContato}', 'App\Http\Controllers\TipoContatoController@edit')->name('tipo-contato.editar');
-    Route::put('/tipo-contato/editar/{tipoContato}', 'App\Http\Controllers\TipoContatoController@update')->name('tipo-contato.editar');
-    Route::delete('/tipo-contato/excluir/{tipoContato}', 'App\Http\Controllers\TipoContatoController@destroy')->name('tipo-contato.excluir');
+    //Serviços
+    Route::get('/servico', 'App\Http\Controllers\ServicoController@index')->name('servico.index');
+    Route::get('/servico/visualizar', 'App\Http\Controllers\ServicoController@show')->name('servico.visualizar');
+    Route::get('/servico/inserir', 'App\Http\Controllers\ServicoController@create')->name('servico.inserir');
+    Route::post('/servico/inserir', 'App\Http\Controllers\ServicoController@store')->name('servico.inserir');
+    Route::get('/servico/editar/{servico}', 'App\Http\Controllers\ServicoController@edit')->name('servico.editar');
+    Route::put('/servico/editar/{servico}', 'App\Http\Controllers\ServicoController@update')->name('servico.editar');
+    Route::delete('/servico/excluir/{servico}', 'App\Http\Controllers\ServicoController@destroy')->name('servico.excluir');
+
+    //Componentes de serviços
+    Route::get('/componente-servico', 'App\Http\Controllers\ComponenteServicoController@index')->name('componente-servico.index');
+    Route::get('/componente-servico/visualizar', 'App\Http\Controllers\ComponenteServicoController@show')->name('componente-servico.visualizar');
+    Route::get('/componente-servico/inserir', 'App\Http\Controllers\ComponenteServicoController@create')->name('componente-servico.inserir');
+    Route::post('/componente-servico/inserir', 'App\Http\Controllers\ComponenteServicoController@store')->name('componente-servico.inserir');
+    Route::get('/componente-servico/editar/{componenteServico}', 'App\Http\Controllers\ComponenteServicoController@edit')->name('componente-servico.editar');
+    Route::put('/componente-servico/editar/{componenteServico}', 'App\Http\Controllers\ComponenteServicoController@update')->name('componente-servico.editar');
+    Route::delete('/componente-servico/excluir/{componenteServico}', 'App\Http\Controllers\ComponenteServicoController@destroy')->name('componente-servico.excluir');
+
+    //Orçamentos
+    Route::get('/orcamento', 'App\Http\Controllers\OrcamentoController@index')->name('orcamento.index');
+    Route::get('/orcamento/visualizar', 'App\Http\Controllers\OrcamentoController@show')->name('orcamento.visualizar');
+    Route::get('/orcamento/inserir', 'App\Http\Controllers\OrcamentoController@create')->name('orcamento.inserir');
+    Route::post('/orcamento/inserir', 'App\Http\Controllers\OrcamentoController@store')->name('orcamento.inserir');
+    Route::get('/orcamento/editar/{orcamento}', 'App\Http\Controllers\OrcamentoController@edit')->name('orcamento.editar');
+    Route::put('/orcamento/editar/{orcamento}', 'App\Http\Controllers\OrcamentoController@update')->name('orcamento.editar');
+    Route::delete('/orcamento/excluir/{orcamento}', 'App\Http\Controllers\OrcamentoController@destroy')->name('orcamento.excluir');
 
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+//É necessário fazer as telas para tipos de contato, visto que o usuário precisa ter a possibilidade de editar ou excluir um tipo de contato
+//Colocar alguma informação em um orçamento, na listagem geral, se ele gerou ordens de serviço ou não
+//Adicionar um campo de observações em orçamentos

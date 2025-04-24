@@ -13,10 +13,9 @@ return new class extends Migration
     {
         Schema::create('componente_servicos', function (Blueprint $table) {
             $table->id();
-            $table->integer('ordem')->nullable(false);
+            $table->integer('ordem')->nullable(true);
             $table->enum('tipo', ['material', 'servico'])->nullable(false);
             $table->string('descricao')->nullable(false);
-            $table->foreignId('servico_id')->constrained('servicos')->nullable(false);
             $table->integer('qtde')->nullable(false);
             $table->foreignId('materia_prima_id')->constrained('materias_primas')->nullable(true);
             $table->float('custo_operacional')->default(0)->nullable(false);

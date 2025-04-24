@@ -13,7 +13,9 @@ class TipoMateriaPrimaController extends Controller
      */
     public function index()
     {
-        //
+        $tipoMateriaPrimas = TipoMateriaPrima::all();
+        
+        return view('tipo-materia-prima.index', compact('tipoMateriaPrimas'));
     }
 
     /**
@@ -21,7 +23,8 @@ class TipoMateriaPrimaController extends Controller
      */
     public function create()
     {
-        //
+        $fields = (new TipoMateriaPrima())->generateFields(__FUNCTION__);
+        return view('tipo-materia-prima.formulario', ['title' => 'Cadastrar Tipo Matéria-prima', 'route' => 'tipo-tipo-materia-prima.inserir', 'fields' => $fields, 'btn_label' => 'Cadastrar']);
     }
 
     /**
@@ -72,7 +75,8 @@ class TipoMateriaPrimaController extends Controller
      */
     public function edit(TipoMateriaPrima $tipoMateriaPrima)
     {
-        //
+        $fields = $tipoMateriaPrima->generateFields(__FUNCTION__);
+        return view('tipo-materia-prima.formulario', ['title' => 'Editar Matéria-prima', 'route' => ['tipo-materia-prima.editar', $tipoMateriaPrima->id] , 'fields' => $fields, 'btn_label' => 'Salvar']);
     }
 
     /**
@@ -80,7 +84,21 @@ class TipoMateriaPrimaController extends Controller
      */
     public function update(Request $request, TipoMateriaPrima $tipoMateriaPrima)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+
+            $tipoMateriaPrima->update([
+                'descricao' => $request->descricao,
+            ]);
+
+            DB::commit();
+            return redirect()->route('tipo-materia-prima.index')->with('success', 'Alterações efetuadas com sucesso.');
+        } catch (\Exception $e) {
+            $fields = $this->generateSessionFields($request);
+            DB::rollBack();
+            return back()->with($fields)->withErrors(['db_error' => 'Erro ao cadastrar tipo de matéria-prima: ' . $e->getMessage()]);
+        }
     }
 
     /**
@@ -88,6 +106,22 @@ class TipoMateriaPrimaController extends Controller
      */
     public function destroy(TipoMateriaPrima $tipoMateriaPrima)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $tipoMateriaPrima->delete();
+            DB::commit();
+            return redirect()->route('tipo-materia-prima.index')->with('success', 'Matéria-prima excluído com sucesso.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('tipo-materia-prima.index')->withErrors(['db_error' => 'Erro ao excluir tipo de matéria-prima: ' . $e->getMessage()]);
+        }
+    }
+
+    public function generateSessionFields(Request $request)
+    {
+        $fields = [
+            'descricao' => $request->descricao,
+        ];
+        return $fields;
     }
 }

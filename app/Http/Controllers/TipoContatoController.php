@@ -13,7 +13,9 @@ class TipoContatoController extends Controller
      */
     public function index()
     {
-        //
+        $tipoContatos = TipoContato::all();
+        
+        return view('tipo-contato.index', compact('tipoContatos'));
     }
 
     /**
@@ -21,7 +23,8 @@ class TipoContatoController extends Controller
      */
     public function create()
     {
-        //
+        $fields = (new TipoContato())->generateFields(__FUNCTION__);
+        return view('tipo-contato.formulario', ['title' => 'Cadastrar Tipo Matéria-prima', 'route' => 'tipo-tipo-contato.inserir', 'fields' => $fields, 'btn_label' => 'Cadastrar']);
     }
 
     /**
@@ -72,7 +75,8 @@ class TipoContatoController extends Controller
      */
     public function edit(TipoContato $tipoContato)
     {
-        //
+        $fields = $tipoContato->generateFields(__FUNCTION__);
+        return view('tipo-contato.formulario', ['title' => 'Editar Matéria-prima', 'route' => ['tipo-contato.editar', $tipoContato->id] , 'fields' => $fields, 'btn_label' => 'Salvar']);
     }
 
     /**
@@ -80,7 +84,21 @@ class TipoContatoController extends Controller
      */
     public function update(Request $request, TipoContato $tipoContato)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+
+            $tipoContato->update([
+                'descricao' => $request->descricao,
+            ]);
+
+            DB::commit();
+            return redirect()->route('tipo-contato.index')->with('success', 'Alterações efetuadas com sucesso.');
+        } catch (\Exception $e) {
+            $fields = $this->generateSessionFields($request);
+            DB::rollBack();
+            return back()->with($fields)->withErrors(['db_error' => 'Erro ao cadastrar tipo de contato: ' . $e->getMessage()]);
+        }
     }
 
     /**
@@ -88,6 +106,22 @@ class TipoContatoController extends Controller
      */
     public function destroy(TipoContato $tipoContato)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $tipoContato->delete();
+            DB::commit();
+            return redirect()->route('tipo-contato.index')->with('success', 'Matéria-prima excluído com sucesso.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('tipo-contato.index')->withErrors(['db_error' => 'Erro ao excluir tipo de contato: ' . $e->getMessage()]);
+        }
+    }
+
+    public function generateSessionFields(Request $request)
+    {
+        $fields = [
+            'descricao' => $request->descricao,
+        ];
+        return $fields;
     }
 }

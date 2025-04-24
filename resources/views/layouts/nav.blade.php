@@ -15,11 +15,17 @@
                         Cadastros
                     </a>
                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cadastrosDropdown">
-                        <a class="nav-link" href="{{ route('pessoa.index') }}">Pessoas</a>
-                        <a class="nav-link" href="{{ route('cliente.index') }}">Serviços</a>
-                        <a class="nav-link" href="{{ route('materia-prima.index') }}">Matéria-prima</a>
-                        <a class="nav-link" href="{{ route('cliente.index') }}">Orçamentos</a>
-                        <a class="nav-link" href="{{ route('cliente.index') }}">Ordens de serviços</a>
+                        <a class="dropdown-item nav-link" href="{{ route('pessoa.index') }}">Pessoas</a>
+                        <a class="dropdown-item nav-link" href="{{ route('servico.index') }}">Serviços</a>
+                        <a class="dropdown-item nav-link" href="{{ route('materia-prima.index') }}">Matéria-prima</a>
+                        <a class="dropdown-item nav-link" href="{{ route('orcamento.index') }}">Orçamentos</a>
+                        <a class="dropdown-item nav-link" href="{{ route('cliente.index') }}">Ordens de serviços</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item nav-link" href="{{ route('componente-servico.index') }}">Componentes de Serviços</a>
+                        <a class="dropdown-item nav-link" href="{{ route('tipo-materia-prima.index') }}">Tipo de Matéria-prima</a>
+                        <a class="dropdown-item nav-link" href="{{ route('tipo-contato.index') }}">Tipo de Contato</a>
+
+                        
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -27,9 +33,9 @@
                         Movimentações
                     </a>
                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="movimentacoesDropdown">
-                        <a class="nav-link" href="{{ route('cliente.index') }}">Entradas</a>
-                        <a class="nav-link" href="{{ route('cliente.index') }}">Saídas</a>
-                        <a class="nav-link" href="{{ route('cliente.index') }}">Perdas/Quebras</a>
+                        <a class="dropdown-item nav-link" href="{{ route('cliente.index') }}">Entradas</a>
+                        <a class="dropdown-item nav-link" href="{{ route('cliente.index') }}">Saídas</a>
+                        <a class="dropdown-item nav-link" href="{{ route('cliente.index') }}">Perdas/Quebras</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -37,8 +43,8 @@
                         Relatórios
                     </a>
                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="relatoriosDropdown">
-                        <a class="nav-link" href="{{ route('cliente.index') }}">Estoque</a>
-                        <a class="nav-link" href="{{ route('cliente.index') }}">Financeiro</a>
+                        <a class="dropdown-item nav-link" href="{{ route('cliente.index') }}">Estoque</a>
+                        <a class="dropdown-item nav-link" href="{{ route('cliente.index') }}">Financeiro</a>
                     </div>
                 </li>
             </ul>

@@ -5,6 +5,9 @@ Pessoas
 @endsection()
 
 @section('content')
+@error('db_error')
+<span>{{ $message }}</span>
+@enderror
 <div>
     <h1><span style="font-size: 48px; color: Dodgerblue;"><i class="fa-solid fa-clipboard-user"></i></span> Pessoas</h1>
     <a class="btn btn-sm btn-primary mr-5" style="float:right" href="{{ route('pessoa.inserir') }}"><i class="fa-solid fa-user-plus"></i></a>
@@ -33,7 +36,7 @@ Pessoas
                 <td>{{ $pessoa->cpf_cnpj }}</td>
                 <td>{{ $pessoa->login }}</td>
                 <td>{{ !is_null($pessoa->fornecedor) ?  $pessoa->fornecedor->tipo_fornecedor  : '-' }}</td>
-                <td>{{ !is_null($pessoa->cliente) ? $pessoa->cliente->tipo_cliente : '-' }}</td>
+                <td>{{ !is_null($pessoa->cliente) ? $pessoa->cliente->tipo : '-' }}</td>
                 <td>{{ !is_null($pessoa->cliente) ? $pessoa->cliente->limite_credito : '-' }}</td>
                 <td>{{ !is_null($pessoa->cliente) ? $pessoa->cliente->taxa_desconto : '-' }}</td>
                 <td>{{ !is_null($pessoa->funcionario) ? $pessoa->funcionario->cargo : '-' }}</td>
@@ -43,11 +46,11 @@ Pessoas
                     <div class="col">
                         <a class="btn btn-sm btn-warning" href="{{ route('pessoa.editar', $pessoa->id) }}"><span style="font-size: 12px"><i class="fa-solid fa-user-pen"></i></span></a>
                         <a class="btn btn-sm btn-danger" onclick="event.preventDefault();
-                            document.getElementById('excluir-form').submit();">
+                            document.getElementById('excluir-form-{{ $pessoa->id }}').submit();">
                             <span style="font-size: 12px"><i class="fa-solid fa-trash"></span></i>
                         </a>
 
-                        <form id="excluir-form" action="{{ route('pessoa.excluir', $pessoa->id) }}" method="POST" class="d-none">
+                        <form id="excluir-form-{{ $pessoa->id }}" action="{{ route('pessoa.excluir', $pessoa->id) }}" method="POST" class="d-none">
                             @csrf
                             @method('DELETE')
                         </form>
