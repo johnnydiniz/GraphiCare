@@ -24,7 +24,7 @@ class TipoMateriaPrimaController extends Controller
     public function create()
     {
         $fields = (new TipoMateriaPrima())->generateFields(__FUNCTION__);
-        return view('tipo-materia-prima.formulario', ['title' => 'Cadastrar Tipo Matéria-prima', 'route' => 'tipo-tipo-materia-prima.inserir', 'fields' => $fields, 'btn_label' => 'Cadastrar']);
+        return view('tipo-materia-prima.formulario', ['title' => 'Cadastrar Tipo Matéria-prima', 'route' => 'tipo-materia-prima.inserir', 'fields' => $fields, 'btn_label' => 'Cadastrar']);
     }
 
     /**
