@@ -1,80 +1,43 @@
-<nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-    <div class="container">
-        <a class="navbar-brand" href="{{ url('/') }}">
-            {{ config('app.name', 'Laravel') }}
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+<nav class="navbar navbar-expand-lg bg-white border-bottom border-light py-3 px-4">
+    <div class="container-fluid">
+        <!-- Logo e Nome da Empresa -->
+        <div class="d-flex align-items-center me-5">
+            <div class="d-flex align-items-center justify-content-center gap-2 text-dark">
+                <div class="rounded-circle border d-flex align-items-center justify-content-center logo-icon">
+                    <img src="{{ asset('imgs/logo.png') }}" alt="Printer">
+                </div>
+                <h2 class="m-0 fs-5 fw-bold" style="letter-spacing: -0.015em;">GraphiCare</h2>
+            </div>
+        </div>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <!-- Left Side Of Navbar -->
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item dropdown">
-                    <a id="cadastrosDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                        Cadastros
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cadastrosDropdown">
-                        <a class="dropdown-item nav-link" href="{{ route('pessoa.index') }}">Pessoas</a>
-                        <a class="dropdown-item nav-link" href="{{ route('servico.index') }}">Serviços</a>
-                        <a class="dropdown-item nav-link" href="{{ route('materia-prima.index') }}">Matéria-prima</a>
-                        <a class="dropdown-item nav-link" href="{{ route('orcamento.index') }}">Orçamentos</a>
-                        <a class="dropdown-item nav-link" href="{{ route('cliente.index') }}">Ordens de serviços</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item nav-link" href="{{ route('componente-servico.index') }}">Componentes de Serviços</a>
-                        <a class="dropdown-item nav-link" href="{{ route('tipo-materia-prima.index') }}">Tipo de Matéria-prima</a>
-                        <a class="dropdown-item nav-link" href="{{ route('tipo-contato.index') }}">Tipo de Contato</a>
+        <!-- Itens de Navegação -->
+        <div class="d-none d-lg-flex align-items-center gap-5 me-auto">
+            <a class="text-dark text-decoration-none small fw-medium" href="{{ route('home') }}"><i
+                    class="fa-solid fa-house"></i> {{ __('Home') }}</a>
+            <a class="text-dark text-decoration-none small fw-medium" href="{{ route('orcamento.index') }}"><i
+                    class="fa-solid fa-file-contract"></i> {{ __('Quotes') }}</a>
+            <a class="text-dark text-decoration-none small fw-medium" href="{{ route('home') }}"><i
+                    class="fa-solid fa-print"></i> {{ __('Orders') }}</a>
+            <a class="text-dark text-decoration-none small fw-medium" href="{{ route('pessoa.index') }}"><i
+                    class="fa-solid fa-people-group"></i> {{ __('People') }}</a>
+            <a class="text-dark text-decoration-none small fw-medium" href="{{ route('servico.index') }}"><i
+                    class="fa-solid fa-clipboard"></i> {{ __('Services') }}</a>
+            <a class="text-dark text-decoration-none small fw-medium" href="{{ route('home') }}"><i
+                    class="fa-solid fa-boxes-stacked"></i> {{ __('Inventory') }}</a>
+            <a class="text-dark text-decoration-none small fw-medium" href="{{ route('home') }}"><i
+                    class="fa-solid fa-square-poll-horizontal"></i> {{ __('Reports') }}</a>
+        </div>
 
-                        
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a id="movimentacoesDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                        Movimentações
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="movimentacoesDropdown">
-                        <a class="dropdown-item nav-link" href="{{ route('cliente.index') }}">Entradas</a>
-                        <a class="dropdown-item nav-link" href="{{ route('cliente.index') }}">Saídas</a>
-                        <a class="dropdown-item nav-link" href="{{ route('cliente.index') }}">Perdas/Quebras</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a id="relatoriosDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                        Relatórios
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="relatoriosDropdown">
-                        <a class="dropdown-item nav-link" href="{{ route('cliente.index') }}">Estoque</a>
-                        <a class="dropdown-item nav-link" href="{{ route('cliente.index') }}">Financeiro</a>
-                    </div>
-                </li>
-            </ul>
-
-            <!-- Right Side Of Navbar -->
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <button class="btn btn-primary mx-1 my-sm-0" type="button"> + Orçamento</button>
-                </li>
-                <li class="nav-item">
-                    <button class="btn btn-primary mx-1 my-sm-0" type="button"> + Ordem de serviço</button>
-                </li>
-                <!-- Authentication Links -->
-                <li class="nav-item dropdown">
-                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                        {{ Auth::user()->nome_social }}
-                    </a>
-
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{{ route('sair') }}" onclick="event.preventDefault();
-                                             document.getElementById('logout-form').submit();">
-                            {{ __('Logout') }}
-                        </a>
-
-                        <form id="logout-form" action="{{ route('sair') }}" method="POST" class="d-none">
-                            @csrf
-                        </form>
-                    </div>
-                </li>
-            </ul>
+        <!-- Configurações e Avatar -->
+        <div class="d-flex align-items-center gap-4">
+            <a class="text-dark text-decoration-none small fw-medium" href="{{ route('home') }}"><i
+                    class="fa-solid fa-gears"></i> {{ __('Settings') }}</a>
+            <!-- Avatar -->
+            <a class="text-dark text-decoration-none small fw-medium" href="{{ route('home') }}">
+                <div class="rounded-circle overflow-hidden"
+                    style="width: 40px; height: 40px; background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCzkehLwdOwFIvR47ve53EgzDuFZmWUx1kINKGEfd7I9fJsundC2rIrAUCX01tDKfQCBxSvKEFA7wiW1pZ4tq_ciOPpxVko3NTK4NRC4wyvquY82ynCZAjFLtA5axPDIT2XggKPEkfe4i3KHJ7v7cCETqXJTTGS4tlJpIiz-DLDtynSKn8r7Ht8HeDst3r4r-Fa11RYVdJRDVoZhZVYdqdlOjBKHGdEc0jeeHZ13mnHP6VoDy2aQ1aYbYTdBUa8KMaNKOj6XuJMoKdG'); background-size: cover; background-position: center;">
+                </div>
+            </a>
         </div>
     </div>
 </nav>

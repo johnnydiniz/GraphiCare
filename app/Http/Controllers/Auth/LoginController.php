@@ -5,17 +5,25 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
-    public function showLoginForm()
+    public function login()
     {
-        return view('auth.login');
+        $loader = app('translator')->getLoader();
+        Log::info('Lang paths: ', [
+            'paths' => $loader->namespaces(), // Mostra namespaces registrados
+            'default_path' => lang_path(), // Mostra o caminho padrão
+        ]);
+        if (!Auth::check())
+            return view('auth.login');
+
+        return redirect()->intended('/home');
     }
 
-    public function login(Request $request)
+    public function authenticate(Request $request)
     {
-        // dd($request);
         $credentials = $request->validate([
             'login' => ['required'],
             'password' => ['required'],
@@ -24,11 +32,11 @@ class LoginController extends Controller
         if (Auth::attempt(['login' => $credentials['login'], 'password' => $credentials['password']])) {
             $request->session()->regenerate();
 
-            return redirect()->intended('dashboard');
+            return redirect()->intended('/home');
         }
 
         return back()->withErrors([
-            'login' => 'Login ou senha inválidos.',
+            'login' => __('auth.failed')
         ]);
     }
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use NumberFormatter;
 
 class Servico extends Model
 {
@@ -27,7 +28,8 @@ class Servico extends Model
      *
      * @var list<string>
      */
-    public function generateFields(String $function){
+    public function generateFields(String $function)
+    {
         $fields = [
             ['name' => 'ativo', 'label' => 'Ativo', 'type' => 'checkbox', 'checked' => $this->ativo ?? true, 'hidden' => $function == 'create' ? 'hidden' : false],
             ['name' => 'descricao', 'label' => 'Descrição', 'type' => 'text', 'value' => $this->descricao ?? '', 'required' => true],
@@ -39,24 +41,37 @@ class Servico extends Model
         return $fields;
     }
 
+    public function generateSubFields(String $function, int $count)
+    {
+        // $subfields = (new ComponenteServico())->generateFields($function);
+        $formatter = new NumberFormatter('pt_BR',  NumberFormatter::CURRENCY);
+        $componentesServico = ComponenteServico::with('MateriaPrima')->get();
+
+        $subfields = [['name' => "servico[$count]", 'label' => 'Componentes do serviço', 'type' => 'select', 'options' => ComponenteServico::all()->pluck('descricao', 'id'), 'selected' => $this->componenteServico_id ?? null]];
+        return $subfields;
+    }
+
     /**
      * The relationship with ComponenteServico
      */
-    public function componenteServico(){
+    public function componenteServico()
+    {
         return $this->belongsToMany(ComponenteServico::class, 'servicos_componente_servicos');
     }
 
     /**
      * The relationship with OrdemServico
      */
-    public function ordemServico(){
+    public function ordemServico()
+    {
         return $this->belongsToMany(OrdemServico::class, 'servicos_ordem_servicos');
     }
 
     /**
      * The relationship with Orcamento
      */
-    public function orcamento(){
+    public function orcamento()
+    {
         return $this->belongsToMany(Orcamento::class, 'servicos_orcamentos');
     }
 }

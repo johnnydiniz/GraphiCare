@@ -26,7 +26,8 @@ class ServicoController extends Controller
     public function create()
     {
         $fields = (new Servico())->generateFields(__FUNCTION__);
-        return view('servico.formulario', ['title' => 'Cadastrar Serviço', 'route' => 'servico.inserir', 'fields' => $fields, 'btn_label' => 'Cadastrar']);
+        $subfields = (new Servico())->generateSubFields(__FUNCTION__, 0);
+        return view('servico.formulario', ['title' => 'Cadastrar Serviço', 'route' => 'servico.inserir', 'fields' => $fields, 'subfields' => $subfields, 'btn_label' => 'Cadastrar']);
     }
 
     /**

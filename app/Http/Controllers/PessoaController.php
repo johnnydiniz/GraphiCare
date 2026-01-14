@@ -19,8 +19,9 @@ class PessoaController extends Controller
     public function index()
     {
         $pessoas = Pessoa::with(['fornecedor', 'cliente', 'funcionario'])->get();
-
-        return view('pessoa.index', compact('pessoas'));
+        $title = 'People';
+        $route = 'pessoa.inserir';
+        return view('pessoa.index', compact('pessoas', 'title', 'route'));
     }
 
     /**

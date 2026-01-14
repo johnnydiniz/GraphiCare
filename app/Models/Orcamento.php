@@ -27,7 +27,7 @@ class Orcamento extends Model
             ['name' => 'previsao_inicio', 'label' => 'Previsão de Início', 'type' => 'date', 'value' => $this->previsao_inicio ?? null],
             ['name' => 'previsao_entrega', 'label' => 'Previsão de Entrega', 'type' => 'date', 'value' => $this->previsao_entrega ?? null],
             ['name' => 'validade', 'label' => 'Validade', 'type' => 'date', 'value' => $this->validade ?? null],
-            ['name' => 'cliente_id', 'label' => 'Cliente', 'type' => 'select', 'required' => true, 'options' => Cliente::all()->pluck('nome', 'id'), 'selected' => $this->cliente_id ?? null, 'action' => 'Cliente'],
+            ['name' => 'cliente_id', 'label' => 'Cliente', 'type' => 'select', 'required' => true, 'options' => Cliente::all()->pluck('pessoa.nome_social', 'id'), 'selected' => $this->cliente_id ?? null, 'action' => 'Cliente'],
         ];
         return $fields;
     }

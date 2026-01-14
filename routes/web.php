@@ -2,11 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', 'App\Http\Controllers\Auth\LoginController@showLoginForm')->name('login');
-Route::post('/autenticar', 'App\Http\Controllers\Auth\LoginController@login')->name('autenticar');
+Route::get('/', 'App\Http\Controllers\Auth\LoginController@login')->name('login');
+Route::post('/autenticar', 'App\Http\Controllers\Auth\LoginController@authenticate')->name('autenticar');
 Route::post('/logout', 'App\Http\Controllers\Auth\LoginController@logout')->name('sair');
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home');
 
     //Pessoa
     Route::get('/pessoa', 'App\Http\Controllers\PessoaController@index')->name('pessoa.index');
@@ -102,6 +103,8 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+
+//No momento estou trabalhando no orçamento. Preciso garantir uma forma de adicionar vários campos para os serviços que serão realizados
 
 //É necessário fazer as telas para tipos de contato, visto que o usuário precisa ter a possibilidade de editar ou excluir um tipo de contato
 //Colocar alguma informação em um orçamento, na listagem geral, se ele gerou ordens de serviço ou não
