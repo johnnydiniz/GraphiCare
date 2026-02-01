@@ -1,7 +1,19 @@
 import './bootstrap';
 import { Toast } from 'bootstrap';
 
-const APP_URL = 'http://localhost:8012/';
+const APP_URL = document.querySelector('meta[name="app-url"]')?.getAttribute('content') + '/' || '/';
+
+window.showToast = function(message, type = 'success') {
+    let toastElement = document.getElementById("toastMessage");
+    toastElement.classList.remove("bg-success", "bg-danger", "bg-warning", "bg-info");
+    toastElement.classList.add("bg-" + type);
+
+    let toastBody = toastElement.querySelector(".toast-body");
+    toastBody.textContent = message;
+
+    let toast = new Toast(toastElement);
+    toast.show();
+};
 
 $(document).ready(function () {
     $(".btn-modal").on("click", function () {
@@ -32,16 +44,4 @@ $(document).ready(function () {
             });
 
     });
-
-    function showToast(message, type = 'success') {
-        let toastElement = document.getElementById("toastMessage");
-        toastElement.classList.remove("bg-success", "bg-danger");
-        toastElement.classList.add(type === 'success' ? "bg-success" : "bg-danger");
-
-        let toastBody = toastElement.querySelector(".toast-body");
-        toastBody.textContent = message;
-
-        let toast = new Toast(toastElement);
-        toast.show();
-    }
 });

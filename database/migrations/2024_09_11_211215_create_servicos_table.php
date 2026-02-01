@@ -13,12 +13,8 @@ return new class extends Migration
     {
         Schema::create('servicos', function (Blueprint $table) {
             $table->id();
+            $table->boolean('ativo')->default(true)->nullable(false);
             $table->string('descricao')->nullable(false);
-            $table->integer('qtde')->nullable(false);
-            $table->float('valor')->nullable(false);
-            $table->float('custo')->nullable(false);
-            $table->time('tempo_realizacao')->nullable(false);
-            $table->boolean('ativo')->nullable(false);
             $table->timestamps();
         });
     }

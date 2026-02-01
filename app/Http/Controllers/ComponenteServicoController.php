@@ -5,7 +5,6 @@ use App\Models\ComponenteServico;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use NumberFormatter;
 
 class ComponenteServicoController extends Controller
 {
@@ -14,10 +13,11 @@ class ComponenteServicoController extends Controller
      */
     public function index()
     {
-        $formatter = new NumberFormatter('pt_BR',  NumberFormatter::CURRENCY);
-        $componentesServico = ComponenteServico::with('MateriaPrima')->get();
+        $componentesServico = ComponenteServico::with(['materiaPrima.tipoMateriaPrima', 'equipamentoOperacional'])->get();
+        $title = 'Service Components';
+        $route = 'componente-servico.inserir';
 
-        return view('componente-servico.index', compact('componentesServico', 'formatter'));
+        return view('componente-servico.index', compact('componentesServico', 'title', 'route'));
     }
 
     /**
@@ -38,9 +38,8 @@ class ComponenteServicoController extends Controller
         $validator = Validator::make($request->all(), [
             'tipo'              => 'required',
             'descricao'         => 'required',
-            'qtde'              => 'required',
-            'materia_prima_id'  => 'required',
-            'custo_operacional' => 'required',
+            'materia_prima_id'  => 'nullable',
+            'equipamento_operacional_id' => 'nullable',
         ]);
         if ($validator->fails()) {
             $fields = $this->generateSessionFields($request);
@@ -52,11 +51,11 @@ class ComponenteServicoController extends Controller
         try {
 
             ComponenteServico::create([
+                'ativo'             => true,
                 'tipo'              => $request->tipo,
                 'descricao'         => $request->descricao,
-                'qtde'              => $request->qtde,
                 'materia_prima_id'  => $request->materia_prima_id,
-                'custo_operacional' => $request->custo_operacional,
+                'equipamento_operacional_id' => $request->equipamento_operacional_id,
             ]);
 
             DB::commit();
@@ -97,9 +96,8 @@ class ComponenteServicoController extends Controller
             $componenteServico->update([
                 'tipo'              => $request->tipo,
                 'descricao'         => $request->descricao,
-                'qtde'              => $request->qtde,
                 'materia_prima_id'  => $request->materia_prima_id,
-                'custo_operacional' => $request->custo_operacional,
+                'equipamento_operacional_id' => $request->equipamento_operacional_id,
             ]);
 
             DB::commit();
@@ -108,6 +106,20 @@ class ComponenteServicoController extends Controller
             $fields = $this->generateSessionFields($request);
             DB::rollBack();
             return back()->with($fields)->withErrors(['db_error' => 'Erro ao cadastrar componente de serviço: ' . $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Toggle the active status of the specified resource.
+     */
+    public function toggleStatus(ComponenteServico $componenteServico)
+    {
+        try {
+            $componenteServico->update(['ativo' => !$componenteServico->ativo]);
+            $status = $componenteServico->ativo ? __('activated') : __('deactivated');
+            return redirect()->route('componente-servico.index')->with('success', __('Service component :status successfully.', ['status' => $status]));
+        } catch (\Exception $e) {
+            return redirect()->route('componente-servico.index')->withErrors(['db_error' => __('Error changing status: ') . $e->getMessage()]);
         }
     }
 
@@ -132,10 +144,34 @@ class ComponenteServicoController extends Controller
         $fields = [
             'tipo'              => $request->tipo,
             'descricao'         => $request->descricao,
-            'qtde'              => $request->qtde,
             'materia_prima_id'  => $request->materia_prima_id,
-            'custo_operacional' => $request->custo_operacional,
+            'equipamento_operacional_id' => $request->equipamento_operacional_id,
         ];
         return $fields;
+    }
+
+    /**
+     * Get active components by type (AJAX)
+     */
+    public function getByType(Request $request)
+    {
+        $tipo = $request->get('tipo');
+
+        $componentes = ComponenteServico::with(['materiaPrima', 'equipamentoOperacional'])
+            ->where('ativo', true)
+            ->where('tipo', $tipo)
+            ->get()
+            ->map(function ($componente) {
+                // Custo base vem do custo_operacional do componente (preenchido automaticamente)
+                $custoBase = $componente->custo_operacional ?? 0;
+
+                return [
+                    'id' => $componente->id,
+                    'descricao' => $componente->descricao,
+                    'custo_base' => $custoBase,
+                ];
+            });
+
+        return response()->json($componentes);
     }
 }

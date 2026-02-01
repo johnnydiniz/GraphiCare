@@ -71,9 +71,10 @@ class FuncionarioController extends Controller
             ]);
 
             Funcionario::create([
+                'ativo'     => true,
                 'pessoa_id' => $pessoa->id,
-                'cargo'      => $request->cargo,
-                'salario'    => $request->salario,
+                'cargo'     => $request->cargo,
+                'salario'   => $request->salario,
             ]);
 
             DB::commit();
@@ -134,6 +135,20 @@ class FuncionarioController extends Controller
     }
 
     /**
+     * Toggle the active status of the specified resource.
+     */
+    public function toggleStatus(Funcionario $funcionario)
+    {
+        try {
+            $funcionario->update(['ativo' => !$funcionario->ativo]);
+            $status = $funcionario->ativo ? __('activated') : __('deactivated');
+            return redirect()->back()->with('success', __('Employee :status successfully.', ['status' => $status]));
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['db_error' => __('Error changing status: ') . $e->getMessage()]);
+        }
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Funcionario $funcionario)
@@ -142,10 +157,10 @@ class FuncionarioController extends Controller
         try {
             $funcionario->delete();
             DB::commit();
-            return redirect()->route('funcionario.index')->with('success', 'Funcionário excluído com sucesso.');
+            return redirect()->back()->with('success', 'Funcionário excluído com sucesso.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('funcionario.index')->withErrors(['db_error' => 'Erro ao excluir funcionário: ' . $e->getMessage()]);
+            return redirect()->back()->withErrors(['db_error' => 'Erro ao excluir funcionário: ' . $e->getMessage()]);
         }
     }
 

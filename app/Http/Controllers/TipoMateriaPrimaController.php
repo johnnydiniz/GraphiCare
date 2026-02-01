@@ -14,8 +14,10 @@ class TipoMateriaPrimaController extends Controller
     public function index()
     {
         $tipoMateriaPrimas = TipoMateriaPrima::all();
-        
-        return view('tipo-materia-prima.index', compact('tipoMateriaPrimas'));
+        $title = 'Raw Material Types';
+        $route = 'tipo-materia-prima.inserir';
+
+        return view('tipo-materia-prima.index', compact('tipoMateriaPrimas', 'title', 'route'));
     }
 
     /**
@@ -98,6 +100,20 @@ class TipoMateriaPrimaController extends Controller
             $fields = $this->generateSessionFields($request);
             DB::rollBack();
             return back()->with($fields)->withErrors(['db_error' => 'Erro ao cadastrar tipo de matéria-prima: ' . $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Toggle the active status of the specified resource.
+     */
+    public function toggleStatus(TipoMateriaPrima $tipoMateriaPrima)
+    {
+        try {
+            $tipoMateriaPrima->update(['ativo' => !$tipoMateriaPrima->ativo]);
+            $status = $tipoMateriaPrima->ativo ? __('activated') : __('deactivated');
+            return redirect()->route('tipo-materia-prima.index')->with('success', __('Raw material type :status successfully.', ['status' => $status]));
+        } catch (\Exception $e) {
+            return redirect()->route('tipo-materia-prima.index')->withErrors(['db_error' => __('Error changing status: ') . $e->getMessage()]);
         }
     }
 

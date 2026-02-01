@@ -29,8 +29,23 @@ class PessoaController extends Controller
      */
     public function create()
     {
-        $fields = (new Pessoa())->generateFields(__FUNCTION__);
-        return view('pessoa.formulario', ['title' => 'Cadastrar Pessoa', 'route' => 'pessoa.inserir', 'fields' => $fields, 'btn_label' => 'Cadastrar']);
+        $function = __FUNCTION__;
+
+        $fieldGroups = [
+            ['key' => 'geral', 'label' => 'General', 'fields' => (new Pessoa())->generateFields($function)],
+            ['key' => 'cliente', 'label' => 'Customer', 'fields' => (new Cliente())->generateFields($function)],
+            ['key' => 'fornecedor', 'label' => 'Provider', 'fields' => (new Fornecedor())->generateFields($function)],
+            ['key' => 'funcionario', 'label' => 'Employee', 'fields' => (new Funcionario())->generateFields($function)],
+            ['key' => 'contato', 'label' => 'Contact', 'fields' => (new Contato())->generateFields($function)],
+            ['key' => 'endereco', 'label' => 'Address', 'fields' => (new Endereco())->generateFields($function)],
+        ];
+
+        return view('pessoa.formulario', [
+            'title' => 'Cadastrar Pessoa',
+            'route' => 'pessoa.inserir',
+            'fieldGroups' => $fieldGroups,
+            'btn_label' => 'Cadastrar',
+        ]);
     }
 
     /**
@@ -43,14 +58,14 @@ class PessoaController extends Controller
 
         //Validação de campos específicos de pessoa
         $validator = Validator::make($request->all(), [
-            'tipo'            => 'required|in:cliente,funcionario,fornecedor',
+            'tipo'            => 'required|in:fisica,juridica',
             'login'           => 'required|string|max:255|unique:pessoas',
             'senha'           => 'required|string|min:8',
-            'cpf_cnpj'        => 'string|max:14|unique:pessoas',
+            'cpf_cnpj'        => 'required|string|max:14|unique:pessoas',
             'nome_registro'   => 'required|string|max:255',
-            'nome_social'     => 'string|max:255',
-            'data_nascimento' => 'date',
-            'escolaridade'    => 'in:ensino_fundamental,ensino_medio,ensino_superior',
+            'nome_social'     => 'nullable|string|max:255',
+            'data_nascimento' => 'nullable|date',
+            'escolaridade'    => 'required|in:nao_informado,fundamental,medio,superior,pos_graduacao,mestrado,doutorado',
         ]);
 
         if ($validator->fails()) {
@@ -148,40 +163,53 @@ class PessoaController extends Controller
                 'escolaridade'    => $request->escolaridade,
             ]);
 
-            $temContato ?? Contato::create([
-                'pessoa_id'    => $pessoa->id,
-                'tipo_contato' => $request->tipo_contato,
-                'contato'      => $request->contato,
-            ]);
+            if ($temContato) {
+                Contato::create([
+                    'pessoa_id'    => $pessoa->id,
+                    'tipo_contato' => $request->tipo_contato,
+                    'contato'      => $request->contato,
+                ]);
+            }
 
-            $temEndereco ?? Endereco::create([
-                'pessoa_id'   => $pessoa->id,
-                'cep'         => $request->cep,
-                'logradouro'  => $request->logradouro,
-                'numero'      => $request->numero,
-                'complemento' => $request->complemento,
-                'bairro'      => $request->bairro,
-                'cidade'      => $request->cidade,
-                'estado'      => $request->estado,
-            ]);
+            if ($temEndereco) {
+                Endereco::create([
+                    'pessoa_id'   => $pessoa->id,
+                    'cep'         => $request->cep,
+                    'logradouro'  => $request->logradouro,
+                    'numero'      => $request->numero,
+                    'complemento' => $request->complemento,
+                    'bairro'      => $request->bairro,
+                    'cidade'      => $request->cidade,
+                    'estado'      => $request->estado,
+                ]);
+            }
 
-            $temFornecedor ?? Fornecedor::create([
-                'pessoa_id' => $pessoa->id,
-                'tipo'      => $request->tipo_fornecedor,
-            ]);
+            if ($temFornecedor) {
+                Fornecedor::create([
+                    'ativo'     => true,
+                    'pessoa_id' => $pessoa->id,
+                    'tipo'      => $request->tipo_fornecedor,
+                ]);
+            }
 
-            $temCliente ?? Cliente::create([
-                'pessoa_id'      => $pessoa->id,
-                'tipo'           => $request->tipo_cliente,
-                'limite_credito' => $request->limite_credito,
-                'taxa_desconto'  => $request->taxa_desconto,
-            ]);
+            if ($temCliente) {
+                Cliente::create([
+                    'ativo'          => true,
+                    'pessoa_id'      => $pessoa->id,
+                    'tipo'           => $request->tipo_cliente,
+                    'limite_credito' => $request->limite_credito,
+                    'taxa_desconto'  => $request->taxa_desconto,
+                ]);
+            }
 
-            $temFuncionario ?? Funcionario::create([
-                'pessoa_id' => $pessoa->id,
-                'cargo'     => $request->cargo,
-                'salario'   => $request->salario,
-            ]);
+            if ($temFuncionario) {
+                Funcionario::create([
+                    'ativo'     => true,
+                    'pessoa_id' => $pessoa->id,
+                    'cargo'     => $request->cargo,
+                    'salario'   => $request->salario,
+                ]);
+            }
 
             DB::commit();
             return redirect()->route('pessoa.index')->with('success', 'Funcionário cadastrado com sucesso.');
@@ -205,8 +233,26 @@ class PessoaController extends Controller
      */
     public function edit(Pessoa $pessoa)
     {
-        $fields = $pessoa->generateFields(__FUNCTION__);
-        return view('pessoa.formulario', ['title' => 'Editar Funcionário', 'route' => ['pessoa.editar', $pessoa->id], 'fields' => $fields, 'btn_label' => 'Salvar']);
+        $function = __FUNCTION__;
+
+        $fieldGroups = [
+            ['key' => 'geral', 'label' => 'General', 'fields' => $pessoa->generateFields($function)],
+            ['key' => 'cliente', 'label' => 'Customer', 'fields' => ($pessoa->cliente ?? new Cliente())->generateFields($function)],
+            ['key' => 'fornecedor', 'label' => 'Provider', 'fields' => ($pessoa->fornecedor ?? new Fornecedor())->generateFields($function)],
+            ['key' => 'funcionario', 'label' => 'Employee', 'fields' => ($pessoa->funcionario ?? new Funcionario())->generateFields($function)],
+            ['key' => 'contato', 'label' => 'Contact', 'fields' => ($pessoa->contatos && $pessoa->contatos->count() > 0
+                ? $pessoa->contatos->first()
+                : new Contato()
+            )->generateFields($function)],
+            ['key' => 'endereco', 'label' => 'Address', 'fields' => ($pessoa->endereco ?? new Endereco())->generateFields($function)],
+        ];
+
+        return view('pessoa.formulario', [
+            'title' => 'Editar Pessoa',
+            'route' => ['pessoa.editar', $pessoa->id],
+            'fieldGroups' => $fieldGroups,
+            'btn_label' => 'Salvar',
+        ]);
     }
 
     /**
@@ -267,6 +313,7 @@ class PessoaController extends Controller
                 ! is_null($pessoa->fornecedor) ? $pessoa->fornecedor->update([
                     'tipo' => $request->tipo_fornecedor,
                 ]) : Fornecedor::create([
+                    'ativo'     => true,
                     'pessoa_id' => $pessoa->id,
                     'tipo'      => $request->tipo_fornecedor,
                 ]);
@@ -278,6 +325,7 @@ class PessoaController extends Controller
                     'limite_credito' => $request->limite_credito,
                     'taxa_desconto'  => $request->taxa_desconto,
                 ]) : Cliente::create([
+                    'ativo'          => true,
                     'pessoa_id'      => $pessoa->id,
                     'tipo'           => $request->tipo_cliente,
                     'limite_credito' => $request->limite_credito,
@@ -290,6 +338,7 @@ class PessoaController extends Controller
                     'cargo'   => $request->cargo,
                     'salario' => $request->salario,
                 ]) : Funcionario::create([
+                    'ativo'     => true,
                     'pessoa_id' => $pessoa->id,
                     'cargo'     => $request->cargo,
                     'salario'   => $request->salario,
@@ -302,6 +351,20 @@ class PessoaController extends Controller
             $fields = $this->generateSessionFields($request);
             DB::rollBack();
             return back()->with($fields)->withErrors(['db_error' => 'Erro ao cadastrar funcionário: ' . $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Toggle the active status of the specified resource.
+     */
+    public function toggleStatus(Pessoa $pessoa)
+    {
+        try {
+            $pessoa->update(['ativo' => !$pessoa->ativo]);
+            $status = $pessoa->ativo ? __('activated') : __('deactivated');
+            return redirect()->route('pessoa.index')->with('success', __('Person :status successfully.', ['status' => $status]));
+        } catch (\Exception $e) {
+            return redirect()->route('pessoa.index')->withErrors(['db_error' => __('Error changing status: ') . $e->getMessage()]);
         }
     }
 
@@ -334,6 +397,18 @@ class PessoaController extends Controller
             DB::rollBack();
             return redirect()->route('pessoa.index')->withErrors(['db_error' => 'Erro ao excluir pessoa: ' . $e->getMessage()]);
         }
+    }
+
+    private function getFormTabs(): array
+    {
+        return [
+            ['key' => 'geral', 'label' => 'General', 'icon' => 'fa-solid fa-users'],
+            ['key' => 'cliente', 'label' => 'Customer', 'icon' => 'fa-solid fa-handshake'],
+            ['key' => 'fornecedor', 'label' => 'Provider', 'icon' => 'fa-solid fa-truck'],
+            ['key' => 'funcionario', 'label' => 'Employee', 'icon' => 'fa-solid fa-id-badge'],
+            ['key' => 'contato', 'label' => 'Contact', 'icon' => 'fa-solid fa-address-book'],
+            ['key' => 'endereco', 'label' => 'Address', 'icon' => 'fa-solid fa-location-dot'],
+        ];
     }
 
     public function generateSessionFields(Request $request)

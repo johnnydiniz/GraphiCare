@@ -22,8 +22,10 @@
                     class="fa-solid fa-people-group"></i> {{ __('People') }}</a>
             <a class="text-dark text-decoration-none small fw-medium" href="{{ route('servico.index') }}"><i
                     class="fa-solid fa-clipboard"></i> {{ __('Services') }}</a>
-            <a class="text-dark text-decoration-none small fw-medium" href="{{ route('home') }}"><i
+            <a class="text-dark text-decoration-none small fw-medium" href="{{ route('materia-prima.index') }}"><i
                     class="fa-solid fa-boxes-stacked"></i> {{ __('Inventory') }}</a>
+            <a class="text-dark text-decoration-none small fw-medium" href="{{ route('equipamento-operacional.index') }}"><i
+                    class="fa-solid fa-toolbox"></i> {{ __('Machinery') }}</a>
             <a class="text-dark text-decoration-none small fw-medium" href="{{ route('home') }}"><i
                     class="fa-solid fa-square-poll-horizontal"></i> {{ __('Reports') }}</a>
         </div>

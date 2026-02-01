@@ -14,8 +14,10 @@ class TipoContatoController extends Controller
     public function index()
     {
         $tipoContatos = TipoContato::all();
-        
-        return view('tipo-contato.index', compact('tipoContatos'));
+        $title = 'Contact Types';
+        $route = 'tipo-contato.inserir';
+
+        return view('tipo-contato.index', compact('tipoContatos', 'title', 'route'));
     }
 
     /**
@@ -98,6 +100,20 @@ class TipoContatoController extends Controller
             $fields = $this->generateSessionFields($request);
             DB::rollBack();
             return back()->with($fields)->withErrors(['db_error' => 'Erro ao cadastrar tipo de contato: ' . $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Toggle the active status of the specified resource.
+     */
+    public function toggleStatus(TipoContato $tipoContato)
+    {
+        try {
+            $tipoContato->update(['ativo' => !$tipoContato->ativo]);
+            $status = $tipoContato->ativo ? __('activated') : __('deactivated');
+            return redirect()->route('tipo-contato.index')->with('success', __('Contact type :status successfully.', ['status' => $status]));
+        } catch (\Exception $e) {
+            return redirect()->route('tipo-contato.index')->withErrors(['db_error' => __('Error changing status: ') . $e->getMessage()]);
         }
     }
 

@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('servicos_componente_servicos', function (Blueprint $table) {
             $table->id();
+            $table->integer('ordem')->nullable(true);
+            $table->integer('qtde')->default(1)->nullable(false);
+            $table->float('custo_operacional')->default(0)->nullable(false);
             $table->foreignId('servico_id')->constrained('servicos')->nullable(false);
             $table->foreignId('componente_servico_id')->constrained('componente_servicos')->nullable(false);
             $table->timestamps();

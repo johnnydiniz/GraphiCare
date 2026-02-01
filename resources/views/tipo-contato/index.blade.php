@@ -1,49 +1,45 @@
-@extends('layouts.app')
+@extends('layouts.list')
 
-@section('title')
-Tipo de Contato
-@endsection()
-
-@section('content')
-<div>
-    <h1><span style="font-size: 48px; color: Dodgerblue;"><i class="fa-solid fa-clipboard-user"></i></span> Tipo de Contato</h1>
-    <a class="btn btn-sm btn-primary mr-5" style="float:right" href="{{ route('tipo-contato.inserir') }}"><i class="fa-solid fa-user-plus"></i></a>
-    <table class="table table-striped">
-        <thead>
-            <tr class="text-center">
-                <th>Descrição</th>
-                <th>Ativo</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if($tipoContatos->isEmpty())
-            <tr>
-                <td colspan="3" class="text-center">Nenhum tipo de contato cadastrado</td>
-            </tr>
-            @else
-            @foreach ($tipoContatos as $tipoContato)
-            <tr class="text-center">
-                <td>{{ $tipoContato->descricao }}</td>
-                <td>{{ $tipoContato->ativo ? 'Sim' : 'Não' }}</td>
-                <td class="text-center">
-                    <div class="col">
-                        <a class="btn btn-sm btn-warning" href="{{ route('tipo-contato.editar', $tipoContato->id) }}"><span style="font-size: 12px"><i class="fa-solid fa-user-pen"></i></span></a>
-                        <a class="btn btn-sm btn-danger" onclick="event.preventDefault();
-                            document.getElementById('excluir-form-{{ $tipoContato->id }}').submit();">
-                            <span style="font-size: 12px"><i class="fa-solid fa-trash"></i></span>
-                        </a>
-
-                        <form id="excluir-form-{{ $tipoContato->id }}" action="{{ route('tipo-contato.excluir', $tipoContato->id) }}" method="POST" class="d-none">
-                            @csrf
-                            @method('DELETE')
-                        </form>
-                    </div>
+@section('table')
+<div class="p-4 py-3">
+    <div class="table-responsive rounded-3 border border-light bg-light">
+        <x-data-table
+        :columns="[
+            ['label' => 'ID', 'width' => '15%'],
+            ['label' => __('Description'), 'width' => '55%'],
+            ['label' => __('Actions'), 'width' => '30%'],
+        ]"
+        :items="$tipoContatos"
+        empty-message="{{ __('No contact types registered') }}">
+        @foreach ($tipoContatos as $tipoContato)
+            <tr class="border-top border-light align-middle" data-status="{{ $tipoContato->ativo ? 'ativo' : 'inativo' }}">
+                <td class="text-dark small py-2 ps-4" style="height: 72px;">
+                    #{{ $tipoContato->id }}
+                </td>
+                <td class="text-secondary small py-2 ps-4" style="height: 72px;">
+                    {{ $tipoContato->descricao }}
+                </td>
+                <td class="text-dark small py-2 ps-4">
+                    <x-table-actions
+                        :id="$tipoContato->id"
+                        prefix="tipo-contato"
+                        :view-details="[
+                            __('Description') => ['label' => __('Description'), 'value' => $tipoContato->descricao],
+                            __('Active') => ['label' => __('Active'), 'value' => $tipoContato->ativo],
+                        ]"
+                        :view-title="__('Contact Type Details') . ' #' . $tipoContato->id"
+                        :edit-route="route('tipo-contato.editar', $tipoContato->id)"
+                        :toggle-route="route('tipo-contato.toggle-status', $tipoContato->id)"
+                        :is-active="$tipoContato->ativo"
+                        :delete-route="route('tipo-contato.excluir', $tipoContato->id)"
+                        :delete-message="__('Are you sure you want to delete this contact type?')" />
                 </td>
             </tr>
-            @endforeach
-            @endif
-        </tbody>
-    </table>
+        @endforeach
+        </x-data-table>
+    </div>
 </div>
-@endsection()
+
+<x-confirm-modal />
+<x-view-modal />
+@endsection

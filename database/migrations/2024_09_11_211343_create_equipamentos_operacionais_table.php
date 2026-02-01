@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('clientes', function (Blueprint $table) {
+        Schema::create('equipamentos_operacionais', function (Blueprint $table) {
             $table->id();
             $table->boolean('ativo')->default(true);
-            $table->enum('tipo', ['final', 'representante'])->nullable(false);
-            $table->float('limite_credito')->nullable(false);
-            $table->float('taxa_desconto')->nullable(false);
-            $table->foreignId('pessoa_id')->constrained('pessoas');
+            $table->string('descricao')->unique();
+            $table->float('custo')->default(0);
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('clientes');
+        Schema::dropIfExists('equipamentos_operacionais');
     }
 };

@@ -10,27 +10,23 @@ class Orcamento extends Model
     use HasFactory;
 
     protected $fillable = [
+        'ativo',
         'desconto',
+        'taxa_lucro',
         'custo_final',
         'valor_final',
         'previsao_inicio',
         'previsao_entrega',
         'validade',
+        'observacoes',
         'cliente_id',
     ];
 
-    public function generateFields(String $function){
-        $fields = [
-            ['name' => 'desconto', 'label' => 'Desconto', 'type' => 'number', 'value' => $this->desconto ?? 0, 'step' => '0.01'],
-            ['name' => 'custo_final', 'label' => 'Custo Final', 'type' => 'number', 'value' => $this->custo_final ?? 0, 'step' => '0.01'],
-            ['name' => 'valor_final', 'label' => 'Valor Final', 'type' => 'number', 'value' => $this->valor_final ?? 0, 'step' => '0.01'],
-            ['name' => 'previsao_inicio', 'label' => 'Previsão de Início', 'type' => 'date', 'value' => $this->previsao_inicio ?? null],
-            ['name' => 'previsao_entrega', 'label' => 'Previsão de Entrega', 'type' => 'date', 'value' => $this->previsao_entrega ?? null],
-            ['name' => 'validade', 'label' => 'Validade', 'type' => 'date', 'value' => $this->validade ?? null],
-            ['name' => 'cliente_id', 'label' => 'Cliente', 'type' => 'select', 'required' => true, 'options' => Cliente::all()->pluck('pessoa.nome_social', 'id'), 'selected' => $this->cliente_id ?? null, 'action' => 'Cliente'],
-        ];
-        return $fields;
-    }
+    protected $casts = [
+        'previsao_inicio' => 'date',
+        'previsao_entrega' => 'date',
+        'validade' => 'date',
+    ];
 
     /**
      * The relationship with Cliente
@@ -43,8 +39,40 @@ class Orcamento extends Model
     /**
      * The relationship with Servico
      */
-    public function servico()
+    public function servicos()
     {
-        return $this->belongsToMany(Servico::class, 'servicos_orcamentos');
+        return $this->belongsToMany(Servico::class, 'servicos_orcamentos')
+            ->withPivot('qtde')
+            ->withTimestamps();
+    }
+
+    /**
+     * Calculate the total cost based on services and their quantities
+     */
+    public function calcularCustoFinal()
+    {
+        $total = 0;
+        foreach ($this->servicos as $servico) {
+            $qtde = $servico->pivot->qtde ?? 1;
+            $custoServico = $servico->custo_estimado ?? 0;
+            $total += $custoServico * $qtde;
+        }
+        return $total;
+    }
+
+    /**
+     * Calculate the final value (cost + profit - discount)
+     */
+    public function calcularValorFinal()
+    {
+        $custoFinal = $this->custo_final ?? $this->calcularCustoFinal();
+        $taxaLucro = $this->taxa_lucro ?? 0;
+        $desconto = $this->desconto ?? 0;
+
+        // valor_final = custo_final * (1 + taxa_lucro/100) * (1 - desconto/100)
+        $valorComLucro = $custoFinal * (1 + ($taxaLucro / 100));
+        $valorFinal = $valorComLucro * (1 - ($desconto / 100));
+
+        return $valorFinal;
     }
 }

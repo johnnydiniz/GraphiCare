@@ -17,7 +17,7 @@ class Endereco extends Model
     public function generateFields(String $function){
         
         $fields = [
-            ['name' => 'cep', 'label' => 'CEP', 'type' => 'text', 'value' => $this->cep ?? ''],
+            ['name' => 'cep', 'label' => 'CEP', 'type' => 'text', 'value' => $this->cep ?? '', 'mask' => 'cep'],
             ['name' => 'logradouro', 'label' => 'Logradouro', 'type' => 'text', 'value' => $this->logradouro ?? ''],
             ['name' => 'numero', 'label' => 'Número', 'type' => 'text', 'value' => $this->numero ?? ''],
             ['name' => 'complemento', 'label' => 'Complemento', 'type' => 'text', 'value' => $this->complemento ?? ''],

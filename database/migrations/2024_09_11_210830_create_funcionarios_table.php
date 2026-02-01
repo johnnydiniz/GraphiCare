@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('funcionarios', function (Blueprint $table) {
             $table->id();
+            $table->boolean('ativo')->default(true);
             $table->string('cargo')->nullable(true);
             $table->float('salario')->nullable(true);
             $table->foreignId('pessoa_id')->constrained('pessoas');

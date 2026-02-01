@@ -17,6 +17,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pessoa/editar/{pessoa}', 'App\Http\Controllers\PessoaController@edit')->name('pessoa.editar');
     Route::put('/pessoa/editar/{pessoa}', 'App\Http\Controllers\PessoaController@update')->name('pessoa.editar');
     Route::delete('/pessoa/excluir/{pessoa}', 'App\Http\Controllers\PessoaController@destroy')->name('pessoa.excluir');
+    Route::patch('/pessoa/toggle-status/{pessoa}', 'App\Http\Controllers\PessoaController@toggleStatus')->name('pessoa.toggle-status');
 
     //Tipos de contatos
     Route::get('/tipo-contato', 'App\Http\Controllers\TipoContatoController@index')->name('tipo-contato.index');
@@ -26,7 +27,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tipo-contato/editar/{tipoContato}', 'App\Http\Controllers\TipoContatoController@edit')->name('tipo-contato.editar');
     Route::put('/tipo-contato/editar/{tipoContato}', 'App\Http\Controllers\TipoContatoController@update')->name('tipo-contato.editar');
     Route::delete('/tipo-contato/excluir/{tipoContato}', 'App\Http\Controllers\TipoContatoController@destroy')->name('tipo-contato.excluir');
-        
+    Route::patch('/tipo-contato/toggle-status/{tipoContato}', 'App\Http\Controllers\TipoContatoController@toggleStatus')->name('tipo-contato.toggle-status');
+
     //Funcionário
     Route::get('/funcionario', 'App\Http\Controllers\FuncionarioController@index')->name('funcionario.index');
     Route::get('/funcionario/visualizar', 'App\Http\Controllers\FuncionarioController@show')->name('funcionario.visualizar');
@@ -35,6 +37,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/funcionario/editar/{funcionario}', 'App\Http\Controllers\FuncionarioController@edit')->name('funcionario.editar');
     Route::put('/funcionario/editar/{funcionario}', 'App\Http\Controllers\FuncionarioController@update')->name('funcionario.editar');
     Route::delete('/funcionario/excluir/{funcionario}', 'App\Http\Controllers\FuncionarioController@destroy')->name('funcionario.excluir');
+    Route::patch('/funcionario/toggle-status/{funcionario}', 'App\Http\Controllers\FuncionarioController@toggleStatus')->name('funcionario.toggle-status');
 
     //Cliente
     Route::get('/cliente', 'App\Http\Controllers\ClienteController@index')->name('cliente.index');
@@ -44,6 +47,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/cliente/editar/{cliente}', 'App\Http\Controllers\ClienteController@edit')->name('cliente.editar');
     Route::put('/cliente/editar/{cliente}', 'App\Http\Controllers\ClienteController@update')->name('cliente.editar');
     Route::delete('/cliente/excluir/{cliente}', 'App\Http\Controllers\ClienteController@destroy')->name('cliente.excluir');
+    Route::patch('/cliente/toggle-status/{cliente}', 'App\Http\Controllers\ClienteController@toggleStatus')->name('cliente.toggle-status');
 
     //Fornecedores
     Route::get('/fornecedor', 'App\Http\Controllers\FornecedorController@index')->name('fornecedor.index');
@@ -53,6 +57,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/fornecedor/editar/{fornecedor}', 'App\Http\Controllers\FornecedorController@edit')->name('fornecedor.editar');
     Route::put('/fornecedor/editar/{fornecedor}', 'App\Http\Controllers\FornecedorController@update')->name('fornecedor.editar');
     Route::delete('/fornecedor/excluir/{fornecedor}', 'App\Http\Controllers\FornecedorController@destroy')->name('fornecedor.excluir');
+    Route::patch('/fornecedor/toggle-status/{fornecedor}', 'App\Http\Controllers\FornecedorController@toggleStatus')->name('fornecedor.toggle-status');
 
     //Matérias-primas
     Route::get('/materia-prima', 'App\Http\Controllers\MateriaPrimaController@index')->name('materia-prima.index');
@@ -62,6 +67,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/materia-prima/editar/{materiaPrima}', 'App\Http\Controllers\MateriaPrimaController@edit')->name('materia-prima.editar');
     Route::put('/materia-prima/editar/{materiaPrima}', 'App\Http\Controllers\MateriaPrimaController@update')->name('materia-prima.editar');
     Route::delete('/materia-prima/excluir/{materiaPrima}', 'App\Http\Controllers\MateriaPrimaController@destroy')->name('materia-prima.excluir');
+    Route::patch('/materia-prima/toggle-status/{materiaPrima}', 'App\Http\Controllers\MateriaPrimaController@toggleStatus')->name('materia-prima.toggle-status');
 
     //Tipos de matérias-primas
     Route::get('/tipo-materia-prima', 'App\Http\Controllers\TipoMateriaPrimaController@index')->name('tipo-materia-prima.index');
@@ -71,7 +77,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tipo-materia-prima/editar/{tipoMateriaPrima}', 'App\Http\Controllers\TipoMateriaPrimaController@edit')->name('tipo-materia-prima.editar');
     Route::put('/tipo-materia-prima/editar/{tipoMateriaPrima}', 'App\Http\Controllers\TipoMateriaPrimaController@update')->name('tipo-materia-prima.editar');
     Route::delete('/tipo-materia-prima/excluir/{tipoMateriaPrima}', 'App\Http\Controllers\TipoMateriaPrimaController@destroy')->name('tipo-materia-prima.excluir');
-    
+    Route::patch('/tipo-materia-prima/toggle-status/{tipoMateriaPrima}', 'App\Http\Controllers\TipoMateriaPrimaController@toggleStatus')->name('tipo-materia-prima.toggle-status');
+
+    //Equipamentos operacionais
+    Route::get('/equipamento-operacional', 'App\Http\Controllers\EquipamentoOperacionalController@index')->name('equipamento-operacional.index');
+    Route::get('/equipamento-operacional/visualizar', 'App\Http\Controllers\EquipamentoOperacionalController@show')->name('equipamento-operacional.visualizar');
+    Route::get('/equipamento-operacional/inserir', 'App\Http\Controllers\EquipamentoOperacionalController@create')->name('equipamento-operacional.inserir');
+    Route::post('/equipamento-operacional/inserir', 'App\Http\Controllers\EquipamentoOperacionalController@store')->name('equipamento-operacional.inserir');
+    Route::get('/equipamento-operacional/editar/{equipamentoOperacional}', 'App\Http\Controllers\EquipamentoOperacionalController@edit')->name('equipamento-operacional.editar');
+    Route::put('/equipamento-operacional/editar/{equipamentoOperacional}', 'App\Http\Controllers\EquipamentoOperacionalController@update')->name('equipamento-operacional.editar');
+    Route::delete('/equipamento-operacional/excluir/{equipamentoOperacional}', 'App\Http\Controllers\EquipamentoOperacionalController@destroy')->name('equipamento-operacional.excluir');
+    Route::patch('/equipamento-operacional/toggle-status/{equipamentoOperacional}', 'App\Http\Controllers\EquipamentoOperacionalController@toggleStatus')->name('equipamento-operacional.toggle-status');
+
     //Serviços
     Route::get('/servico', 'App\Http\Controllers\ServicoController@index')->name('servico.index');
     Route::get('/servico/visualizar', 'App\Http\Controllers\ServicoController@show')->name('servico.visualizar');
@@ -80,6 +97,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/servico/editar/{servico}', 'App\Http\Controllers\ServicoController@edit')->name('servico.editar');
     Route::put('/servico/editar/{servico}', 'App\Http\Controllers\ServicoController@update')->name('servico.editar');
     Route::delete('/servico/excluir/{servico}', 'App\Http\Controllers\ServicoController@destroy')->name('servico.excluir');
+    Route::patch('/servico/toggle-status/{servico}', 'App\Http\Controllers\ServicoController@toggleStatus')->name('servico.toggle-status');
 
     //Componentes de serviços
     Route::get('/componente-servico', 'App\Http\Controllers\ComponenteServicoController@index')->name('componente-servico.index');
@@ -89,6 +107,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/componente-servico/editar/{componenteServico}', 'App\Http\Controllers\ComponenteServicoController@edit')->name('componente-servico.editar');
     Route::put('/componente-servico/editar/{componenteServico}', 'App\Http\Controllers\ComponenteServicoController@update')->name('componente-servico.editar');
     Route::delete('/componente-servico/excluir/{componenteServico}', 'App\Http\Controllers\ComponenteServicoController@destroy')->name('componente-servico.excluir');
+    Route::patch('/componente-servico/toggle-status/{componenteServico}', 'App\Http\Controllers\ComponenteServicoController@toggleStatus')->name('componente-servico.toggle-status');
+    Route::get('/componente-servico/por-tipo', 'App\Http\Controllers\ComponenteServicoController@getByType')->name('componente-servico.por-tipo');
 
     //Orçamentos
     Route::get('/orcamento', 'App\Http\Controllers\OrcamentoController@index')->name('orcamento.index');
@@ -98,6 +118,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/orcamento/editar/{orcamento}', 'App\Http\Controllers\OrcamentoController@edit')->name('orcamento.editar');
     Route::put('/orcamento/editar/{orcamento}', 'App\Http\Controllers\OrcamentoController@update')->name('orcamento.editar');
     Route::delete('/orcamento/excluir/{orcamento}', 'App\Http\Controllers\OrcamentoController@destroy')->name('orcamento.excluir');
+    Route::patch('/orcamento/toggle-status/{orcamento}', 'App\Http\Controllers\OrcamentoController@toggleStatus')->name('orcamento.toggle-status');
+    Route::get('/orcamento/servicos', 'App\Http\Controllers\OrcamentoController@getServicos')->name('orcamento.servicos');
 
 });
 

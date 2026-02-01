@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('componente_servicos', function (Blueprint $table) {
             $table->id();
-            $table->integer('ordem')->nullable(true);
-            $table->enum('tipo', ['material', 'servico'])->nullable(false);
+            $table->boolean('ativo')->default(true)->nullable(false);
+            $table->enum('tipo', ['material', 'equipamento'])->nullable(false);
             $table->string('descricao')->nullable(false);
-            $table->integer('qtde')->nullable(false);
-            $table->foreignId('materia_prima_id')->constrained('materias_primas')->nullable(true);
+            $table->foreignId('materia_prima_id')->nullable()->constrained('materias_primas');
+            $table->foreignId('equipamento_operacional_id')->nullable()->constrained('equipamentos_operacionais');
             $table->float('custo_operacional')->default(0)->nullable(false);
             $table->timestamps();
         });

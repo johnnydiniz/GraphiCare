@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('fornecedores', function (Blueprint $table) {
             $table->id();
+            $table->boolean('ativo')->default(true);
             $table->enum('tipo', ['produtos', 'servicos', 'produtos_servicos'])->nullable(false);
             $table->foreignId('pessoa_id')->constrained('pessoas');
             $table->timestamps();
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('fornecedors');
+        Schema::dropIfExists('fornecedores');
     }
 };

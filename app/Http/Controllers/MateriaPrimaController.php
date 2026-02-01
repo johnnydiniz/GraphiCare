@@ -1,11 +1,12 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\ComponenteServico;
 use App\Models\MateriaPrima;
+use App\Models\TipoMateriaPrima;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use NumberFormatter;
 
 class MateriaPrimaController extends Controller
 {
@@ -14,10 +15,11 @@ class MateriaPrimaController extends Controller
      */
     public function index()
     {
-        $formatter = new NumberFormatter('pt_BR',  NumberFormatter::CURRENCY);
         $materiasPrimas = MateriaPrima::with('tipoMateriaPrima')->get();
+        $title = 'Raw Materials';
+        $route = 'materia-prima.inserir';
 
-        return view('materia-prima.index', compact('materiasPrimas', 'formatter'));
+        return view('materia-prima.index', compact('materiasPrimas', 'title', 'route'));
     }
 
     /**
@@ -49,8 +51,7 @@ class MateriaPrimaController extends Controller
         DB::beginTransaction();
 
         try {
-
-            MateriaPrima::create([
+            $materiaPrima = MateriaPrima::create([
                 'ativo' => true,
                 'descricao' => $request->descricao,
                 'custo_medio' => $request->custo_medio ?? 0,
@@ -58,6 +59,20 @@ class MateriaPrimaController extends Controller
                 'estoque_minimo' => $request->estoque_minimo ?? null,
                 'aviso_estoque' => $request->aviso_estoque ? true : false,
                 'tipo_materia_prima_id' => $request->tipo,
+            ]);
+
+            // Buscar o tipo de matéria-prima para montar a descrição
+            $tipoMateriaPrima = TipoMateriaPrima::find($request->tipo);
+            $descricaoComponente = $tipoMateriaPrima ? $tipoMateriaPrima->descricao . ' ' . $materiaPrima->descricao : $materiaPrima->descricao;
+
+            // Auto-criar ComponenteServico
+            ComponenteServico::create([
+                'ativo' => true,
+                'tipo' => 'material',
+                'descricao' => $descricaoComponente,
+                'materia_prima_id' => $materiaPrima->id,
+                'equipamento_operacional_id' => null,
+                'custo_operacional' => $materiaPrima->custo_medio,
             ]);
 
             DB::commit();
@@ -104,12 +119,35 @@ class MateriaPrimaController extends Controller
                 'tipo_materia_prima_id' => $request->tipo,
             ]);
 
+            // Atualizar o ComponenteServico associado
+            $tipoMateriaPrima = TipoMateriaPrima::find($request->tipo);
+            $descricaoComponente = $tipoMateriaPrima ? $tipoMateriaPrima->descricao . ' ' . $request->descricao : $request->descricao;
+
+            ComponenteServico::where('materia_prima_id', $materiaPrima->id)->update([
+                'descricao' => $descricaoComponente,
+                'custo_operacional' => $request->custo_medio,
+            ]);
+
             DB::commit();
             return redirect()->route('materia-prima.index')->with('success', 'Alterações efetuadas com sucesso.');
         } catch (\Exception $e) {
             $fields = $this->generateSessionFields($request);
             DB::rollBack();
             return back()->with($fields)->withErrors(['db_error' => 'Erro ao cadastrar matéria-prima: ' . $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Toggle the active status of the specified resource.
+     */
+    public function toggleStatus(MateriaPrima $materiaPrima)
+    {
+        try {
+            $materiaPrima->update(['ativo' => !$materiaPrima->ativo]);
+            $status = $materiaPrima->ativo ? __('activated') : __('deactivated');
+            return redirect()->route('materia-prima.index')->with('success', __('Raw material :status successfully.', ['status' => $status]));
+        } catch (\Exception $e) {
+            return redirect()->route('materia-prima.index')->withErrors(['db_error' => __('Error changing status: ') . $e->getMessage()]);
         }
     }
 

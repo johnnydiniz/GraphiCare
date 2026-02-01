@@ -14,6 +14,7 @@ class Funcionario extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'ativo',
         'pessoa_id',
         'cargo',
         'salario',
@@ -29,7 +30,7 @@ class Funcionario extends Model
 
         $fields = [
             ['name' => 'cargo', 'label' => 'Cargo', 'type' => 'text', 'value' => $this->cargo ?? ''],
-            ['name' => 'salario', 'label' => 'Salário', 'type' => 'number', 'value' => $this->salario ?? null]
+            ['name' => 'salario', 'label' => 'Salário', 'type' => 'text', 'value' => $this->salario ?? null, 'mask' => 'currency']
         ];
 
         return $fields;

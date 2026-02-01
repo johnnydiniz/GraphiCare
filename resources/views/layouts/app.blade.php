@@ -9,6 +9,8 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- App URL -->
+    <meta name="app-url" content="{{ url('/') }}">
 
     <title>@yield('title')</title>
 
@@ -36,7 +38,7 @@
         </div>
     </div>
     <div class="toast-container position-fixed top-0 end-0 p-3">
-        <div id="toastMessage" class="toast align-items-center text-white bg-success border-0" role="alert"
+        <div id="toastMessage" class="toast align-items-center text-white border-0" role="alert"
             aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
                 <div class="toast-body"></div>
@@ -45,6 +47,36 @@
             </div>
         </div>
     </div>
+    @stack('scripts')
+
+    {{-- Exibir mensagens de sessão automaticamente --}}
+    @if(session('success') || session('error') || session('warning') || session('info'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if(session('success'))
+                showToast('{{ session('success') }}', 'success');
+            @endif
+            @if(session('error'))
+                showToast('{{ session('error') }}', 'danger');
+            @endif
+            @if(session('warning'))
+                showToast('{{ session('warning') }}', 'warning');
+            @endif
+            @if(session('info'))
+                showToast('{{ session('info') }}', 'info');
+            @endif
+        });
+    </script>
+    @endif
+
+    {{-- Exibir erros de validação/banco --}}
+    @if($errors->has('db_error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            showToast('{{ $errors->first('db_error') }}', 'danger');
+        });
+    </script>
+    @endif
 </body>
 
 </html>

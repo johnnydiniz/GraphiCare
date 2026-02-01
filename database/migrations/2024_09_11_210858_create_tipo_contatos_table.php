@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tipo_contatos', function (Blueprint $table) {
             $table->id();
             $table->string('descricao')->nullable(false)->unique();
-            $table->boolean('ativo')->nullable(false);
+            $table->boolean('ativo')->default(true)->nullable(false);
             $table->timestamps();
         });
     }

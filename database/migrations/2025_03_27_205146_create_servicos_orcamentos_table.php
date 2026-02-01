@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('servicos_orcamentos', function (Blueprint $table) {
             $table->id();
+            $table->integer('qtde')->default(1)->nullable(false);
             $table->foreignId('servico_id')->constrained('servicos')->nullable(false);
             $table->foreignId('orcamento_id')->constrained('orcamentos')->nullable(false);
             $table->timestamps();

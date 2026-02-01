@@ -61,8 +61,9 @@ class ClienteController extends Controller
             ]);
 
             Cliente::create([
-                'pessoa_id' => $pessoa->id,
-                'tipo'      => $request->tipo_cliente,
+                'ativo'         => true,
+                'pessoa_id'     => $pessoa->id,
+                'tipo'          => $request->tipo_cliente,
                 'limite_credito' => $request->limite_credito,
                 'taxa_desconto' => $request->taxa_desconto,
             ]);
@@ -125,6 +126,20 @@ class ClienteController extends Controller
     }
 
     /**
+     * Toggle the active status of the specified resource.
+     */
+    public function toggleStatus(Cliente $cliente)
+    {
+        try {
+            $cliente->update(['ativo' => !$cliente->ativo]);
+            $status = $cliente->ativo ? __('activated') : __('deactivated');
+            return redirect()->back()->with('success', __('Customer :status successfully.', ['status' => $status]));
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['db_error' => __('Error changing status: ') . $e->getMessage()]);
+        }
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Cliente $cliente)
@@ -133,10 +148,10 @@ class ClienteController extends Controller
         try {
             $cliente->delete();
             DB::commit();
-            return redirect()->route('cliente.index')->with('success', 'Cliente excluído com sucesso.');
+            return redirect()->back()->with('success', 'Cliente excluído com sucesso.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('cliente.index')->withErrors(['db_error' => 'Erro ao excluir cliente: ' . $e->getMessage()]);
+            return redirect()->back()->withErrors(['db_error' => 'Erro ao excluir cliente: ' . $e->getMessage()]);
         }
     }
 

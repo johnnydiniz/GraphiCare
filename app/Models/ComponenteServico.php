@@ -17,10 +17,10 @@ class ComponenteServico extends Model
         'ativo',
         'tipo',
         'descricao',
-        'qtde',
         'materia_prima_id',
+        'equipamento_operacional_id',
         'custo_operacional',
-        ];
+    ];
 
     protected $table = 'componente_servicos';
 
@@ -31,20 +31,24 @@ class ComponenteServico extends Model
      */
     public function generateFields(String $function)
     {
+        $materiaPrimaOptions = [];
+        $materiasPrimas = MateriaPrima::with('tipoMateriaPrima')->get();
+        foreach ($materiasPrimas as $mp) {
+            $materiaPrimaOptions[$mp->id] = $mp->tipoMateriaPrima->descricao . " " . $mp->descricao;
+        }
 
-        $options = [];
-        $tipos = MateriaPrima::with('tipoMateriaPrima')->get();
-        foreach ($tipos as $tipo) {
-            $options[$tipo->id] = $tipo->tipoMateriaPrima->descricao . " " .  $tipo->descricao;
+        $equipamentoOptions = [];
+        $equipamentos = EquipamentoOperacional::all();
+        foreach ($equipamentos as $ts) {
+            $equipamentoOptions[$ts->id] = $ts->descricao;
         }
 
         $fields = [
             ['name' => 'ativo', 'label' => 'Ativo', 'type' => 'checkbox', 'checked' => $this->ativo ?? true, 'hidden' => $function == 'create' ? 'hidden' : false],
             ['name' => 'tipo', 'label' => 'Tipo', 'type' => 'select', 'options' => ['material' => 'Material', 'servico' => 'Serviço'], 'selected' => $this->tipo ?? 'material', 'hidden' => false],
             ['name' => 'descricao', 'label' => 'Descrição', 'type' => 'text', 'value' => $this->descricao ?? '', 'hidden' => false],
-            ['name' => 'qtde', 'label' => 'Quantidade', 'type' => 'number', 'value' => $this->qtde ?? '', 'hidden' => false],
-            ['name' => 'materia_prima_id', 'label' => 'Matéria-prima', 'type' => 'select', 'options' => $options, 'selected' => $this->materia_prima_id ?? '', 'hidden' => false],
-            ['name' => 'custo_operacional', 'label' => 'Custo operacional', 'type' => 'number', 'value' => $this->custo_operacional ?? '', 'hidden' => false, 'step' => '0.01'],
+            ['name' => 'materia_prima_id', 'label' => 'Matéria-prima', 'type' => 'select', 'options' => $materiaPrimaOptions, 'selected' => $this->materia_prima_id ?? '', 'hidden' => false],
+            ['name' => 'equipamento_operacional_id', 'label' => 'Tipo de Serviço Operacional', 'type' => 'select', 'options' => $equipamentoOptions, 'selected' => $this->equipamento_operacional_id ?? '', 'hidden' => false]
         ];
         return $fields;
     }
@@ -60,11 +64,22 @@ class ComponenteServico extends Model
     }
 
     /**
+     * Get the EquipamentoOperacional that owns the ComponenteServico
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function equipamentoOperacional()
+    {
+        return $this->belongsTo(EquipamentoOperacional::class, 'equipamento_operacional_id');
+    }
+
+    /**
      * The relationship with Servico
      */
     public function servico()
     {
-        return $this->belongsToMany(Servico::class, 'servicos_componente_servicos');
+        return $this->belongsToMany(Servico::class, 'servicos_componente_servicos')
+            ->withPivot('ordem', 'qtde', 'custo_operacional');
     }
 
 }

@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('orcamentos', function (Blueprint $table) {
             $table->id();
-            $table->float('desconto')->nullable(true);
-            $table->float('custo_final')->nullable(false);
-            $table->float('valor_final')->nullable(false);
-            $table->date('previsao_inicio')->nullable(false);
-            $table->date('previsao_entrega')->nullable(false);
-            $table->date('validade')->nullable(false);
+            $table->float('desconto')->nullable(true)->default(0);
+            $table->float('taxa_lucro')->nullable(true)->default(0);
+            $table->float('custo_final')->nullable(false)->default(0);
+            $table->float('valor_final')->nullable(false)->default(0);
+            $table->date('previsao_inicio')->nullable(true);
+            $table->date('previsao_entrega')->nullable(true);
+            $table->date('validade')->nullable(true);
+            $table->text('observacoes')->nullable(true);
             $table->foreignId('cliente_id')->constrained('clientes');
             $table->boolean('ativo')->default(true)->nullable(false);
             $table->timestamps();

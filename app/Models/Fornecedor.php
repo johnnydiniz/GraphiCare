@@ -16,9 +16,9 @@ class Fornecedor extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'ativo',
         'pessoa_id',
-        'cargo',
-        'salario',
+        'tipo',
     ];
 
     /**

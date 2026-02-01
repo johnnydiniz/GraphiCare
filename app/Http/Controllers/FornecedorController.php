@@ -60,6 +60,7 @@ class FornecedorController extends Controller
             ]);
 
             Fornecedor::create([
+                'ativo'     => true,
                 'pessoa_id' => $pessoa->id,
                 'tipo'      => $request->tipo_fornecedor,
             ]);
@@ -122,6 +123,20 @@ class FornecedorController extends Controller
     }
 
     /**
+     * Toggle the active status of the specified resource.
+     */
+    public function toggleStatus(Fornecedor $fornecedor)
+    {
+        try {
+            $fornecedor->update(['ativo' => !$fornecedor->ativo]);
+            $status = $fornecedor->ativo ? __('activated') : __('deactivated');
+            return redirect()->back()->with('success', __('Provider :status successfully.', ['status' => $status]));
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['db_error' => __('Error changing status: ') . $e->getMessage()]);
+        }
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Fornecedor $fornecedor)
@@ -130,10 +145,10 @@ class FornecedorController extends Controller
         try {
             $fornecedor->delete();
             DB::commit();
-            return redirect()->route('fornecedor.index')->with('success', 'Fornecedor excluído com sucesso.');
+            return redirect()->back()->with('success', 'Fornecedor excluído com sucesso.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('fornecedor.index')->withErrors(['db_error' => 'Erro ao excluir funcionário: ' . $e->getMessage()]);
+            return redirect()->back()->withErrors(['db_error' => 'Erro ao excluir fornecedor: ' . $e->getMessage()]);
         }
     }
 
