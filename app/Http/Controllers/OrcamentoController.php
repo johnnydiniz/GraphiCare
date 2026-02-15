@@ -14,7 +14,7 @@ class OrcamentoController extends Controller
      */
     public function index()
     {
-        $orcamentos = Orcamento::with(['cliente.pessoa', 'servicos'])->get();
+        $orcamentos = Orcamento::with(['cliente.pessoa', 'servicos', 'ordensServico.servicos'])->get();
         $title = 'Quotes';
         $route = 'orcamento.inserir';
         return view('orcamento.index', compact('orcamentos', 'title', 'route'));
@@ -120,7 +120,7 @@ class OrcamentoController extends Controller
      */
     public function edit(Orcamento $orcamento)
     {
-        $orcamento->load(['servicos', 'cliente.pessoa']);
+        $orcamento->load(['servicos', 'cliente.pessoa', 'ordensServico.servicos']);
 
         $clientes = Cliente::with('pessoa')
             ->whereHas('pessoa', function($q) {
@@ -224,6 +224,29 @@ class OrcamentoController extends Controller
         } catch (\Exception $e) {
             return redirect()->route('orcamento.index')->withErrors(['db_error' => __('Error deleting quote: ') . $e->getMessage()]);
         }
+    }
+
+    /**
+     * Print client view
+     */
+    public function printCliente(Orcamento $orcamento)
+    {
+        $orcamento->load(['servicos', 'cliente.pessoa']);
+        return view('orcamento.print-cliente', compact('orcamento'));
+    }
+
+    /**
+     * Print admin view
+     */
+    public function printAdmin(Orcamento $orcamento)
+    {
+        $orcamento->load([
+            'servicos.componenteServico.materiaprima.tipoMateriaPrima',
+            'servicos.componenteServico.equipamentoOperacional',
+            'cliente.pessoa',
+            'ordensServico',
+        ]);
+        return view('orcamento.print-admin', compact('orcamento'));
     }
 
     /**

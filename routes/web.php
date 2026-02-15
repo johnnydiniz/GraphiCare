@@ -115,11 +115,29 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/orcamento/visualizar', 'App\Http\Controllers\OrcamentoController@show')->name('orcamento.visualizar');
     Route::get('/orcamento/inserir', 'App\Http\Controllers\OrcamentoController@create')->name('orcamento.inserir');
     Route::post('/orcamento/inserir', 'App\Http\Controllers\OrcamentoController@store')->name('orcamento.inserir');
+    Route::get('/orcamento/servicos', 'App\Http\Controllers\OrcamentoController@getServicos')->name('orcamento.servicos');
+    Route::get('/orcamento/imprimir-cliente/{orcamento}', 'App\Http\Controllers\OrcamentoController@printCliente')->name('orcamento.print-cliente');
+    Route::get('/orcamento/imprimir-admin/{orcamento}', 'App\Http\Controllers\OrcamentoController@printAdmin')->name('orcamento.print-admin');
     Route::get('/orcamento/editar/{orcamento}', 'App\Http\Controllers\OrcamentoController@edit')->name('orcamento.editar');
     Route::put('/orcamento/editar/{orcamento}', 'App\Http\Controllers\OrcamentoController@update')->name('orcamento.editar');
     Route::delete('/orcamento/excluir/{orcamento}', 'App\Http\Controllers\OrcamentoController@destroy')->name('orcamento.excluir');
     Route::patch('/orcamento/toggle-status/{orcamento}', 'App\Http\Controllers\OrcamentoController@toggleStatus')->name('orcamento.toggle-status');
-    Route::get('/orcamento/servicos', 'App\Http\Controllers\OrcamentoController@getServicos')->name('orcamento.servicos');
+
+    //Ordens de serviço
+    Route::get('/ordem-servico', 'App\Http\Controllers\OrdemServicoController@index')->name('ordem-servico.index');
+    Route::get('/ordem-servico/inserir', 'App\Http\Controllers\OrdemServicoController@create')->name('ordem-servico.inserir');
+    Route::post('/ordem-servico/inserir', 'App\Http\Controllers\OrdemServicoController@store')->name('ordem-servico.inserir');
+    Route::get('/ordem-servico/imprimir-producao/{ordemServico}', 'App\Http\Controllers\OrdemServicoController@printProducao')->name('ordem-servico.print-producao');
+    Route::get('/ordem-servico/imprimir-admin/{ordemServico}', 'App\Http\Controllers\OrdemServicoController@printAdmin')->name('ordem-servico.print-admin');
+    Route::get('/ordem-servico/editar/{ordemServico}', 'App\Http\Controllers\OrdemServicoController@edit')->name('ordem-servico.editar');
+    Route::put('/ordem-servico/editar/{ordemServico}', 'App\Http\Controllers\OrdemServicoController@update')->name('ordem-servico.editar');
+    Route::delete('/ordem-servico/excluir/{ordemServico}', 'App\Http\Controllers\OrdemServicoController@destroy')->name('ordem-servico.excluir');
+    Route::patch('/ordem-servico/toggle-status/{ordemServico}', 'App\Http\Controllers\OrdemServicoController@toggleStatus')->name('ordem-servico.toggle-status');
+    Route::get('/ordem-servico/servicos', 'App\Http\Controllers\OrdemServicoController@getServicos')->name('ordem-servico.servicos');
+    Route::get('/ordem-servico/orcamento-servicos/{orcamento}', 'App\Http\Controllers\OrdemServicoController@getOrcamentoServicos')->name('ordem-servico.orcamento-servicos');
+    Route::patch('/ordem-servico/iniciar/{ordemServico}', 'App\Http\Controllers\OrdemServicoController@iniciar')->name('ordem-servico.iniciar');
+    Route::post('/ordem-servico/finalizar/{ordemServico}', 'App\Http\Controllers\OrdemServicoController@finalizar')->name('ordem-servico.finalizar');
+    Route::get('/ordem-servico/componentes/{ordemServico}', 'App\Http\Controllers\OrdemServicoController@getComponentes')->name('ordem-servico.componentes');
 
 });
 

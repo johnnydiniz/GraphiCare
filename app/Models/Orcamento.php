@@ -37,6 +37,14 @@ class Orcamento extends Model
     }
 
     /**
+     * The relationship with OrdemServico
+     */
+    public function ordensServico()
+    {
+        return $this->hasMany(OrdemServico::class);
+    }
+
+    /**
      * The relationship with Servico
      */
     public function servicos()

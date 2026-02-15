@@ -16,7 +16,7 @@
                     class="fa-solid fa-house"></i> {{ __('Home') }}</a>
             <a class="text-dark text-decoration-none small fw-medium" href="{{ route('orcamento.index') }}"><i
                     class="fa-solid fa-file-contract"></i> {{ __('Quotes') }}</a>
-            <a class="text-dark text-decoration-none small fw-medium" href="{{ route('home') }}"><i
+            <a class="text-dark text-decoration-none small fw-medium" href="{{ route('ordem-servico.index') }}"><i
                     class="fa-solid fa-print"></i> {{ __('Orders') }}</a>
             <a class="text-dark text-decoration-none small fw-medium" href="{{ route('pessoa.index') }}"><i
                     class="fa-solid fa-people-group"></i> {{ __('People') }}</a>

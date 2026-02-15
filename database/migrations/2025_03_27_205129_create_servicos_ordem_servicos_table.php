@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('servico_id')->constrained('servicos')->nullable(false);
             $table->foreignId('ordem_servico_id')->constrained('ordem_servicos')->nullable(false);
+            $table->integer('qtde')->default(1);
             $table->timestamps();
         });
     }

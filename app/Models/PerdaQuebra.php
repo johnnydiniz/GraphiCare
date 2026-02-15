@@ -5,21 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Saida extends Model
+class PerdaQuebra extends Model
 {
     use HasFactory;
 
+    protected $table = 'perdas_quebras';
+
     protected $fillable = [
         'qtde',
-        'data_inicio',
-        'data_termino',
+        'data',
         'componente_servico_id',
         'ordem_servico_id',
     ];
 
     protected $casts = [
-        'data_inicio' => 'date',
-        'data_termino' => 'date',
+        'data' => 'date',
     ];
 
     public function componenteServico()
@@ -30,10 +30,5 @@ class Saida extends Model
     public function ordemServico()
     {
         return $this->belongsTo(OrdemServico::class);
-    }
-
-    public function estoque()
-    {
-        return $this->hasOne(Estoque::class);
     }
 }

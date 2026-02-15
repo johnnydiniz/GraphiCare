@@ -13,15 +13,19 @@ return new class extends Migration
     {
         Schema::create('ordem_servicos', function (Blueprint $table) {
             $table->id();
+            $table->boolean('ativo')->default(true)->nullable(false);
+            $table->string('status', 20)->default('pendente');
+            $table->foreignId('cliente_id')->constrained('clientes');
             $table->float('desconto')->nullable(true);
+            $table->float('taxa_lucro')->nullable()->default(0);
             $table->float('custo_final')->nullable(false);
             $table->float('valor_final')->nullable(false);
             $table->date('data_inicio')->nullable(true);
             $table->date('data_fim')->nullable(true);
             $table->enum('tipo_entrega', ['retirada', 'entrega'])->nullable(false);
             $table->date('data_entrega')->nullable(true);
-            $table->foreignId('orcamento_id')->constrained('orcamentos')->nullable(true);
-            $table->boolean('ativo')->default(true)->nullable(false);
+            $table->text('observacoes')->nullable();
+            $table->foreignId('orcamento_id')->nullable()->constrained('orcamentos')->nullOnDelete();
             $table->timestamps();
         });
     }

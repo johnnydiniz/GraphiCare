@@ -8,8 +8,42 @@
 <div class="container-fluid py-5 px-4 px-md-5">
     <div class="row justify-content-center">
         <div class="col-12 col-xl-10">
-            <div class="d-flex flex-wrap justify-content-between mb-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
                 <h1 class="text-dark m-0 fs-2 fw-bold">{{ $title }}</h1>
+                @if(isset($orcamento) && $orcamento->id)
+                    <div class="d-flex gap-2">
+                        {{-- Print Dropdown --}}
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-print me-1"></i> {{ __('Print') }}
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ route('orcamento.print-cliente', $orcamento->id) }}" target="_blank"><i class="fa-solid fa-user me-2"></i>{{ __('Client View') }}</a></li>
+                                <li><a class="dropdown-item" href="{{ route('orcamento.print-admin', $orcamento->id) }}" target="_blank"><i class="fa-solid fa-user-tie me-2"></i>{{ __('Administrative View') }}</a></li>
+                            </ul>
+                        </div>
+                        @php
+                            $consumidoOrc = [];
+                            foreach ($orcamento->ordensServico as $os) {
+                                foreach ($os->servicos as $s) {
+                                    $consumidoOrc[$s->id] = ($consumidoOrc[$s->id] ?? 0) + ($s->pivot->qtde ?? 1);
+                                }
+                            }
+                            $todosEsgotados = $orcamento->servicos->count() > 0 && $orcamento->servicos->every(function($s) use ($consumidoOrc) {
+                                return ($consumidoOrc[$s->id] ?? 0) >= ($s->pivot->qtde ?? 1);
+                            });
+                        @endphp
+                        @if($todosEsgotados)
+                            <button class="btn btn-secondary" disabled title="{{ __('All services already consumed') }}">
+                                <i class="fa-solid fa-file-circle-plus me-1"></i> {{ __('Generate Order') }}
+                            </button>
+                        @else
+                            <a class="btn btn-primary" href="{{ route('ordem-servico.inserir', ['orcamento_id' => $orcamento->id]) }}">
+                                <i class="fa-solid fa-file-circle-plus me-1"></i> {{ __('Generate Order') }}
+                            </a>
+                        @endif
+                    </div>
+                @endif
             </div>
 
             <form method="POST" action="{{ is_array($route) ? route($route[0], $route[1]) : route($route) }}" id="orcamento-form">
