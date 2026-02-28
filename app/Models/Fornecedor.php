@@ -44,4 +44,9 @@ class Fornecedor extends Model
     {
         return $this->belongsTo(Pessoa::class, 'pessoa_id');
     }
+
+    public function ordensCompra()
+    {
+        return $this->hasMany(OrdemCompra::class);
+    }
 }

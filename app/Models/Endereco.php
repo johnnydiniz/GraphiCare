@@ -9,13 +9,20 @@ class Endereco extends Model
 {
     use HasFactory;
 
-    /**
-     * The form fields to be generated
-     *
-     * @var list<string>
-     */
-    public function generateFields(String $function){
-        
+    protected $fillable = [
+        'tipo',
+        'logradouro',
+        'nome_via',
+        'numero',
+        'complemento',
+        'bairro',
+        'cidade',
+        'estado',
+        'cep',
+    ];
+
+    public function generateFields(String $function)
+    {
         $fields = [
             ['name' => 'cep', 'label' => 'CEP', 'type' => 'text', 'value' => $this->cep ?? '', 'mask' => 'cep'],
             ['name' => 'logradouro', 'label' => 'Logradouro', 'type' => 'text', 'value' => $this->logradouro ?? ''],
@@ -29,11 +36,8 @@ class Endereco extends Model
         return $fields;
     }
 
-    /**
-     * The relation to the pessoa
-     */
     public function pessoa()
     {
-        return $this->hasOne(Pessoa::class);
+        return $this->hasOne(Pessoa::class, 'endereco_id');
     }
 }

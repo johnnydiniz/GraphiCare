@@ -139,6 +139,17 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/ordem-servico/finalizar/{ordemServico}', 'App\Http\Controllers\OrdemServicoController@finalizar')->name('ordem-servico.finalizar');
     Route::get('/ordem-servico/componentes/{ordemServico}', 'App\Http\Controllers\OrdemServicoController@getComponentes')->name('ordem-servico.componentes');
 
+    //Ordens de compra
+    Route::get('/ordem-compra', 'App\Http\Controllers\OrdemCompraController@index')->name('ordem-compra.index');
+    Route::get('/ordem-compra/inserir', 'App\Http\Controllers\OrdemCompraController@create')->name('ordem-compra.inserir');
+    Route::post('/ordem-compra/inserir', 'App\Http\Controllers\OrdemCompraController@store')->name('ordem-compra.inserir');
+    Route::get('/ordem-compra/editar/{oc}', 'App\Http\Controllers\OrdemCompraController@edit')->name('ordem-compra.editar');
+    Route::put('/ordem-compra/editar/{oc}', 'App\Http\Controllers\OrdemCompraController@update')->name('ordem-compra.editar');
+    Route::delete('/ordem-compra/excluir/{oc}', 'App\Http\Controllers\OrdemCompraController@destroy')->name('ordem-compra.excluir');
+    Route::patch('/ordem-compra/toggle-status/{oc}', 'App\Http\Controllers\OrdemCompraController@toggleStatus')->name('ordem-compra.toggle-status');
+    Route::get('/ordem-compra/materias-primas', 'App\Http\Controllers\OrdemCompraController@getMateriasPrimas')->name('ordem-compra.materias-primas');
+    Route::post('/ordem-compra/receber/{oc}', 'App\Http\Controllers\OrdemCompraController@receber')->name('ordem-compra.receber');
+
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

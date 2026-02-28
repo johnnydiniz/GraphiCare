@@ -1,9 +1,9 @@
 <div class="row g-4">
     @foreach ($fields as $field)
+        @if (is_array($route) && $field['type'] == 'password')
+            @continue
+        @endif
         <div class="col-12 col-md-{{ $field['proportion'] ?? 6 }}">
-            @if (is_array($route) && $field['type'] == 'password')
-                @continue
-            @endif
             @if ($field['type'] != 'checkbox' && $field['type'] != 'radio')
                 <label class="form-label text-dark mb-2 fw-medium" for="{{ $field['name'] }}" id="label-{{ $field['name'] }}">
                     <span class="label-text">{{ $field['label'] }}</span>

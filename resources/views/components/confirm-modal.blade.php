@@ -3,6 +3,7 @@
     'title' => __('Confirm Action'),
     'message' => __('Are you sure you want to delete this record? This action cannot be undone.'),
     'confirmLabel' => __('Delete'),
+    'confirmClass' => 'btn-danger',
 ])
 
 <div class="modal fade" id="{{ $id }}" tabindex="-1" aria-labelledby="{{ $id }}Label" aria-hidden="true">
@@ -19,7 +20,7 @@
                 <button type="button" class="btn btn-light rounded-3 fw-medium px-4" data-bs-dismiss="modal">
                     {{ __('Cancel') }}
                 </button>
-                <button type="button" class="btn btn-danger rounded-3 fw-medium px-4 confirm-delete-btn">
+                <button type="button" class="btn {{ $confirmClass }} rounded-3 fw-medium px-4 confirm-delete-btn">
                     {{ $confirmLabel }}
                 </button>
             </div>

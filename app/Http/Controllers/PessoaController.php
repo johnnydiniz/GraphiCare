@@ -32,12 +32,12 @@ class PessoaController extends Controller
         $function = __FUNCTION__;
 
         $fieldGroups = [
-            ['key' => 'geral', 'label' => 'General', 'fields' => (new Pessoa())->generateFields($function)],
-            ['key' => 'cliente', 'label' => 'Customer', 'fields' => (new Cliente())->generateFields($function)],
-            ['key' => 'fornecedor', 'label' => 'Provider', 'fields' => (new Fornecedor())->generateFields($function)],
-            ['key' => 'funcionario', 'label' => 'Employee', 'fields' => (new Funcionario())->generateFields($function)],
-            ['key' => 'contato', 'label' => 'Contact', 'fields' => (new Contato())->generateFields($function)],
-            ['key' => 'endereco', 'label' => 'Address', 'fields' => (new Endereco())->generateFields($function)],
+            ['key' => 'geral', 'label' => 'Geral', 'fields' => (new Pessoa())->generateFields($function)],
+            ['key' => 'cliente', 'label' => 'Cliente', 'fields' => (new Cliente())->generateFields($function)],
+            ['key' => 'fornecedor', 'label' => 'Fornecedor', 'fields' => (new Fornecedor())->generateFields($function)],
+            ['key' => 'funcionario', 'label' => 'Funcionário', 'fields' => (new Funcionario())->generateFields($function)],
+            ['key' => 'contato', 'label' => 'Contato', 'fields' => (new Contato())->generateFields($function)],
+            ['key' => 'endereco', 'label' => 'Endereço', 'fields' => (new Endereco())->generateFields($function)],
         ];
 
         return view('pessoa.formulario', [
@@ -77,7 +77,7 @@ class PessoaController extends Controller
         if (! empty($request->tipo_contato) && ! empty($request->contato)) {
             $temContato = true;
             $validator  = Validator::make($request->all(), [
-                'tipo_contato' => 'required|string|max:255',
+                'tipo_contato' => 'required|integer|exists:tipo_contatos,id',
                 'contato'      => 'required|string|max:255',
             ]);
 
@@ -165,15 +165,14 @@ class PessoaController extends Controller
 
             if ($temContato) {
                 Contato::create([
-                    'pessoa_id'    => $pessoa->id,
-                    'tipo_contato' => $request->tipo_contato,
-                    'contato'      => $request->contato,
+                    'pessoa_id'      => $pessoa->id,
+                    'tipo_contato_id' => $request->tipo_contato,
+                    'contato'        => $request->contato,
                 ]);
             }
 
             if ($temEndereco) {
-                Endereco::create([
-                    'pessoa_id'   => $pessoa->id,
+                $endereco = Endereco::create([
                     'cep'         => $request->cep,
                     'logradouro'  => $request->logradouro,
                     'numero'      => $request->numero,
@@ -182,6 +181,7 @@ class PessoaController extends Controller
                     'cidade'      => $request->cidade,
                     'estado'      => $request->estado,
                 ]);
+                $pessoa->update(['endereco_id' => $endereco->id]);
             }
 
             if ($temFornecedor) {
@@ -235,16 +235,18 @@ class PessoaController extends Controller
     {
         $function = __FUNCTION__;
 
+        $pessoa->load(['cliente', 'fornecedor', 'funcionario', 'contatos', 'endereco']);
+
         $fieldGroups = [
-            ['key' => 'geral', 'label' => 'General', 'fields' => $pessoa->generateFields($function)],
-            ['key' => 'cliente', 'label' => 'Customer', 'fields' => ($pessoa->cliente ?? new Cliente())->generateFields($function)],
-            ['key' => 'fornecedor', 'label' => 'Provider', 'fields' => ($pessoa->fornecedor ?? new Fornecedor())->generateFields($function)],
-            ['key' => 'funcionario', 'label' => 'Employee', 'fields' => ($pessoa->funcionario ?? new Funcionario())->generateFields($function)],
-            ['key' => 'contato', 'label' => 'Contact', 'fields' => ($pessoa->contatos && $pessoa->contatos->count() > 0
+            ['key' => 'geral', 'label' => 'Geral', 'fields' => $pessoa->generateFields($function)],
+            ['key' => 'cliente', 'label' => 'Cliente', 'fields' => ($pessoa->cliente ?? new Cliente())->generateFields($function)],
+            ['key' => 'fornecedor', 'label' => 'Fornecedor', 'fields' => ($pessoa->fornecedor ?? new Fornecedor())->generateFields($function)],
+            ['key' => 'funcionario', 'label' => 'Funcionário', 'fields' => ($pessoa->funcionario ?? new Funcionario())->generateFields($function)],
+            ['key' => 'contato', 'label' => 'Contato', 'fields' => ($pessoa->contatos->count() > 0
                 ? $pessoa->contatos->first()
                 : new Contato()
             )->generateFields($function)],
-            ['key' => 'endereco', 'label' => 'Address', 'fields' => ($pessoa->endereco ?? new Endereco())->generateFields($function)],
+            ['key' => 'endereco', 'label' => 'Endereço', 'fields' => ($pessoa->endereco ?? new Endereco())->generateFields($function)],
         ];
 
         return view('pessoa.formulario', [
@@ -266,7 +268,6 @@ class PessoaController extends Controller
         try {
 
             $pessoa->update([
-                'ativo'           => $request->ativo,
                 'tipo'            => $request->tipo,
                 'login'           => $request->login,
                 'senha'           => $request->senha ? bcrypt($request->senha) : $pessoa->senha,
@@ -278,35 +279,44 @@ class PessoaController extends Controller
             ]);
 
             if (! empty($request->tipo_contato) && ! empty($request->contato)) {
-                ! is_null($pessoa->contatos) ? $pessoa->contatos->each->update([
-                    'tipo_contato' => $request->tipo_contato,
-                    'contato'      => $request->contato,
-                ]) : Contato::create([
-                    'pessoa_id'    => $pessoa->id,
-                    'tipo_contato' => $request->tipo_contato,
-                    'contato'      => $request->contato,
-                ]);
+                $contatoExistente = $pessoa->contatos->first();
+                if ($contatoExistente) {
+                    $contatoExistente->update([
+                        'tipo_contato_id' => $request->tipo_contato,
+                        'contato'         => $request->contato,
+                    ]);
+                } else {
+                    Contato::create([
+                        'pessoa_id'       => $pessoa->id,
+                        'tipo_contato_id' => $request->tipo_contato,
+                        'contato'         => $request->contato,
+                    ]);
+                }
             }
 
             if (! empty($request->cep)) {
-                ! is_null($pessoa->enderecos) ? $pessoa->enderecos->each->update([
-                    'cep'         => $request->cep,
-                    'logradouro'  => $request->logradouro,
-                    'numero'      => $request->numero,
-                    'complemento' => $request->complemento,
-                    'bairro'      => $request->bairro,
-                    'cidade'      => $request->cidade,
-                    'estado'      => $request->estado,
-                ]) : Endereco::create([
-                    'pessoa_id'   => $pessoa->id,
-                    'cep'         => $request->cep,
-                    'logradouro'  => $request->logradouro,
-                    'numero'      => $request->numero,
-                    'complemento' => $request->complemento,
-                    'bairro'      => $request->bairro,
-                    'cidade'      => $request->cidade,
-                    'estado'      => $request->estado,
-                ]);
+                if ($pessoa->endereco) {
+                    $pessoa->endereco->update([
+                        'cep'         => $request->cep,
+                        'logradouro'  => $request->logradouro,
+                        'numero'      => $request->numero,
+                        'complemento' => $request->complemento,
+                        'bairro'      => $request->bairro,
+                        'cidade'      => $request->cidade,
+                        'estado'      => $request->estado,
+                    ]);
+                } else {
+                    $endereco = Endereco::create([
+                        'cep'         => $request->cep,
+                        'logradouro'  => $request->logradouro,
+                        'numero'      => $request->numero,
+                        'complemento' => $request->complemento,
+                        'bairro'      => $request->bairro,
+                        'cidade'      => $request->cidade,
+                        'estado'      => $request->estado,
+                    ]);
+                    $pessoa->update(['endereco_id' => $endereco->id]);
+                }
             }
 
             if (! empty($request->tipo_fornecedor) && $request->tipo_fornecedor != 'nao_informado') {
@@ -384,11 +394,13 @@ class PessoaController extends Controller
             if (! is_null($pessoa->funcionario)) {
                 $pessoa->funcionario->delete();
             }
-            if (! is_null($pessoa->contatos)) {
+            if ($pessoa->contatos->count() > 0) {
                 $pessoa->contatos->each->delete();
             }
-            if (! is_null($pessoa->enderecos)) {
-                $pessoa->enderecos->each->delete();
+            if ($pessoa->endereco) {
+                $endereco = $pessoa->endereco;
+                $pessoa->update(['endereco_id' => null]);
+                $endereco->delete();
             }
             $pessoa->delete();
             DB::commit();
@@ -402,12 +414,12 @@ class PessoaController extends Controller
     private function getFormTabs(): array
     {
         return [
-            ['key' => 'geral', 'label' => 'General', 'icon' => 'fa-solid fa-users'],
-            ['key' => 'cliente', 'label' => 'Customer', 'icon' => 'fa-solid fa-handshake'],
-            ['key' => 'fornecedor', 'label' => 'Provider', 'icon' => 'fa-solid fa-truck'],
-            ['key' => 'funcionario', 'label' => 'Employee', 'icon' => 'fa-solid fa-id-badge'],
-            ['key' => 'contato', 'label' => 'Contact', 'icon' => 'fa-solid fa-address-book'],
-            ['key' => 'endereco', 'label' => 'Address', 'icon' => 'fa-solid fa-location-dot'],
+            ['key' => 'geral', 'label' => 'Geral', 'icon' => 'fa-solid fa-users'],
+            ['key' => 'cliente', 'label' => 'Cliente', 'icon' => 'fa-solid fa-handshake'],
+            ['key' => 'fornecedor', 'label' => 'Fornecedor', 'icon' => 'fa-solid fa-truck'],
+            ['key' => 'funcionario', 'label' => 'Funcionário', 'icon' => 'fa-solid fa-id-badge'],
+            ['key' => 'contato', 'label' => 'Contato', 'icon' => 'fa-solid fa-address-book'],
+            ['key' => 'endereco', 'label' => 'Endereço', 'icon' => 'fa-solid fa-location-dot'],
         ];
     }
 

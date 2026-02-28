@@ -9,14 +9,14 @@ class Contato extends Model
 {
     use HasFactory;
 
-    /**
-     * The form fields to be generated
-     *
-     * @var list<string>
-     */
+    protected $fillable = [
+        'tipo_contato_id',
+        'contato',
+        'pessoa_id',
+    ];
+
     public function generateFields(String $function)
     {
-
         $options = [];
         $tipos = TipoContato::all();
         foreach ($tipos as $tipo) {
@@ -24,11 +24,20 @@ class Contato extends Model
         }
 
         $fields = [
-            ['name' => 'tipo_contato[]', 'label' => 'Tipo de contato', 'type' => 'select', 'options' => $options, 'selected' => $this->tipo_contato ?? null, 'action' => 'TipoContato'],
-            ['name' => 'contato[]', 'label' => 'Contato', 'type' => 'text', 'value' => $this->contato ?? null]
+            ['name' => 'tipo_contato', 'label' => 'Tipo de contato', 'type' => 'select', 'options' => $options, 'selected' => $this->tipo_contato_id ?? null, 'action' => 'TipoContato'],
+            ['name' => 'contato', 'label' => 'Contato', 'type' => 'text', 'value' => $this->contato ?? null]
         ];
 
         return $fields;
     }
 
+    public function pessoa()
+    {
+        return $this->belongsTo(Pessoa::class);
+    }
+
+    public function tipoContato()
+    {
+        return $this->belongsTo(TipoContato::class);
+    }
 }
