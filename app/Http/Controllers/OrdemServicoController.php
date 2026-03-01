@@ -8,6 +8,7 @@ use App\Models\Cliente;
 use App\Models\Servico;
 use App\Models\Saida;
 use App\Models\Estoque;
+use App\Models\Fatura;
 use App\Models\PerdaQuebra;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -389,9 +390,17 @@ class OrdemServicoController extends Controller
                 'data_fim' => $hoje,
             ]);
 
+            Fatura::create([
+                'ordem_servico_id' => $ordemServico->id,
+                'valor' => $ordemServico->valor_final,
+                'data_emissao' => $hoje,
+                'data_vencimento' => $hoje->copy()->addDays(30),
+                'status' => 'pendente',
+            ]);
+
             DB::commit();
 
-            return redirect()->route('ordem-servico.index')->with('success', __('Order finished successfully. Stock has been updated.'));
+            return redirect()->route('ordem-servico.index')->with('success', __('Order finished successfully. Stock has been updated.') . ' Fatura gerada automaticamente.');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->route('ordem-servico.index')->withErrors(['db_error' => __('Error finishing order: ') . $e->getMessage()]);

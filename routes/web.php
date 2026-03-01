@@ -150,6 +150,38 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/ordem-compra/materias-primas', 'App\Http\Controllers\OrdemCompraController@getMateriasPrimas')->name('ordem-compra.materias-primas');
     Route::post('/ordem-compra/receber/{oc}', 'App\Http\Controllers\OrdemCompraController@receber')->name('ordem-compra.receber');
 
+    //Perdas e Quebras
+    Route::get('/perda-quebra', 'App\Http\Controllers\PerdasQuebrasController@index')->name('perda-quebra.index');
+    Route::get('/perda-quebra/inserir', 'App\Http\Controllers\PerdasQuebrasController@create')->name('perda-quebra.inserir');
+    Route::post('/perda-quebra/inserir', 'App\Http\Controllers\PerdasQuebrasController@store')->name('perda-quebra.inserir');
+    Route::get('/perda-quebra/editar/{perdaQuebra}', 'App\Http\Controllers\PerdasQuebrasController@edit')->name('perda-quebra.editar');
+    Route::put('/perda-quebra/editar/{perdaQuebra}', 'App\Http\Controllers\PerdasQuebrasController@update')->name('perda-quebra.editar');
+    Route::delete('/perda-quebra/excluir/{perdaQuebra}', 'App\Http\Controllers\PerdasQuebrasController@destroy')->name('perda-quebra.excluir');
+    Route::get('/perda-quebra/materias-primas', 'App\Http\Controllers\PerdasQuebrasController@getMateriasPrimas')->name('perda-quebra.materias-primas');
+
+    //Faturas (Contas a Receber)
+    Route::get('/fatura', 'App\Http\Controllers\FaturaController@index')->name('fatura.index');
+    Route::get('/fatura/inserir', 'App\Http\Controllers\FaturaController@create')->name('fatura.inserir');
+    Route::post('/fatura/inserir', 'App\Http\Controllers\FaturaController@store')->name('fatura.inserir');
+    Route::get('/fatura/editar/{fatura}', 'App\Http\Controllers\FaturaController@edit')->name('fatura.editar');
+    Route::put('/fatura/editar/{fatura}', 'App\Http\Controllers\FaturaController@update')->name('fatura.editar');
+    Route::delete('/fatura/excluir/{fatura}', 'App\Http\Controllers\FaturaController@destroy')->name('fatura.excluir');
+    Route::patch('/fatura/marcar-paga/{fatura}', 'App\Http\Controllers\FaturaController@marcarPaga')->name('fatura.marcar-paga');
+    Route::get('/fatura/ordens-servico', 'App\Http\Controllers\FaturaController@getOrdensServico')->name('fatura.ordens-servico');
+
+    //Fluxo de Caixa
+    Route::get('/fluxo-caixa', 'App\Http\Controllers\FluxoCaixaController@index')->name('fluxo-caixa.index');
+
+    //Boletos (Contas a Pagar)
+    Route::get('/boleto', 'App\Http\Controllers\BoletoController@index')->name('boleto.index');
+    Route::get('/boleto/inserir', 'App\Http\Controllers\BoletoController@create')->name('boleto.inserir');
+    Route::post('/boleto/inserir', 'App\Http\Controllers\BoletoController@store')->name('boleto.inserir');
+    Route::get('/boleto/editar/{boleto}', 'App\Http\Controllers\BoletoController@edit')->name('boleto.editar');
+    Route::put('/boleto/editar/{boleto}', 'App\Http\Controllers\BoletoController@update')->name('boleto.editar');
+    Route::delete('/boleto/excluir/{boleto}', 'App\Http\Controllers\BoletoController@destroy')->name('boleto.excluir');
+    Route::patch('/boleto/marcar-pago/{boleto}', 'App\Http\Controllers\BoletoController@marcarPago')->name('boleto.marcar-pago');
+    Route::get('/boleto/ordens-compra', 'App\Http\Controllers\BoletoController@getOrdensCompra')->name('boleto.ordens-compra');
+
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

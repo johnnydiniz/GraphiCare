@@ -34,4 +34,9 @@ class OrdemCompra extends Model
     {
         return $this->hasMany(Entrada::class);
     }
+
+    public function boletos()
+    {
+        return $this->hasMany(Boleto::class);
+    }
 }

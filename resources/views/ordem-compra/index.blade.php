@@ -74,20 +74,14 @@
                 <td class="text-dark small py-2 ps-4">
                     <div class="d-flex gap-1 align-items-center">
                         @if($oc->status === 'pendente')
-                            <form action="{{ route('ordem-compra.receber', $oc->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                <button type="button" class="btn btn-sm btn-success btn-receber"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#confirmReceberModal"
-                                    data-form-id="ordem-compra-receber-form-{{ $oc->id }}"
-                                    data-message="Tem certeza que deseja receber esta ordem de compra? Isso atualizará o estoque e não poderá ser desfeito."
-                                    title="Receber">
-                                    <span style="font-size: 12px"><i class="fa-solid fa-truck-ramp-box"></i></span>
-                                </button>
-                            </form>
-                            <form id="ordem-compra-receber-form-{{ $oc->id }}" action="{{ route('ordem-compra.receber', $oc->id) }}" method="POST" class="d-none">
-                                @csrf
-                            </form>
+                            <button type="button" class="btn btn-sm btn-success btn-receber"
+                                data-bs-toggle="modal"
+                                data-bs-target="#receberBoletoModal"
+                                data-oc-id="{{ $oc->id }}"
+                                data-oc-valor="{{ $formatCurrency($oc->valor_total) }}"
+                                title="Receber">
+                                <span style="font-size: 12px"><i class="fa-solid fa-truck-ramp-box"></i></span>
+                            </button>
                         @else
                             <button class="btn btn-sm btn-secondary" disabled title="Recebida">
                                 <span style="font-size: 12px"><i class="fa-solid fa-check"></i></span>
@@ -116,8 +110,55 @@
 </div>
 
 <x-confirm-modal />
-<x-confirm-modal id="confirmReceberModal" title="Confirmar Recebimento" message="Tem certeza que deseja receber esta ordem de compra? Isso atualizará o estoque e não poderá ser desfeito." confirmLabel="Receber" confirmClass="btn-success" />
 <x-view-modal />
+
+{{-- Receber + Boleto Modal --}}
+<div class="modal fade" id="receberBoletoModal" tabindex="-1" aria-labelledby="receberBoletoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="receberBoletoForm" method="POST" action="">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="receberBoletoModalLabel">Receber Ordem de Compra</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info mb-3">
+                        <i class="fa-solid fa-circle-info me-1"></i>
+                        Ao receber a ordem de compra, o estoque será atualizado e um boleto será gerado automaticamente. Preencha os dados do boleto abaixo.
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium text-muted">Valor do Boleto</label>
+                        <p class="fw-bold fs-5 text-primary mb-0" id="receberBoletoValor"></p>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <label for="boleto_data_emissao" class="form-label fw-medium">Data de Emissão <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control py-2" id="boleto_data_emissao" name="boleto_data_emissao" value="{{ now()->format('Y-m-d') }}" required>
+                        </div>
+                        <div class="col-6">
+                            <label for="boleto_data_vencimento" class="form-label fw-medium">Data de Vencimento <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control py-2" id="boleto_data_vencimento" name="boleto_data_vencimento" value="{{ now()->addDays(30)->format('Y-m-d') }}" required>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <label for="boleto_observacoes" class="form-label fw-medium">Observações</label>
+                        <textarea class="form-control py-2" id="boleto_observacoes" name="boleto_observacoes" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fa-solid fa-truck-ramp-box me-1"></i> Receber e Gerar Boleto
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
@@ -181,6 +222,24 @@ window.addEventListener('load', function () {
             }
 
             contentEl.innerHTML = html;
+        });
+    }
+
+    // Receber + Boleto modal
+    var receberModal = document.getElementById('receberBoletoModal');
+    if (receberModal) {
+        receberModal.addEventListener('show.bs.modal', function (event) {
+            var trigger = event.relatedTarget;
+            if (!trigger) return;
+
+            var ocId = trigger.getAttribute('data-oc-id');
+            var ocValor = trigger.getAttribute('data-oc-valor');
+
+            var form = document.getElementById('receberBoletoForm');
+            form.action = '/ordem-compra/receber/' + ocId;
+
+            document.getElementById('receberBoletoValor').textContent = ocValor;
+            document.getElementById('boleto_observacoes').value = '';
         });
     }
 });

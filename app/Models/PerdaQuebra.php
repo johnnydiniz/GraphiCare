@@ -14,6 +14,9 @@ class PerdaQuebra extends Model
     protected $fillable = [
         'qtde',
         'data',
+        'motivo',
+        'observacoes',
+        'materia_prima_id',
         'componente_servico_id',
         'ordem_servico_id',
     ];
@@ -21,6 +24,11 @@ class PerdaQuebra extends Model
     protected $casts = [
         'data' => 'date',
     ];
+
+    public function materiaPrima()
+    {
+        return $this->belongsTo(MateriaPrima::class);
+    }
 
     public function componenteServico()
     {
@@ -30,5 +38,10 @@ class PerdaQuebra extends Model
     public function ordemServico()
     {
         return $this->belongsTo(OrdemServico::class);
+    }
+
+    public function estoque()
+    {
+        return $this->hasOne(Estoque::class);
     }
 }

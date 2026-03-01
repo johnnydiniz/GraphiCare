@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Boleto;
 use App\Models\OrdemCompra;
 use App\Models\Entrada;
 use App\Models\Estoque;
@@ -212,11 +213,17 @@ class OrdemCompraController extends Controller
         return response()->json($materiasPrimas);
     }
 
-    public function receber(OrdemCompra $oc)
+    public function receber(Request $request, OrdemCompra $oc)
     {
         if ($oc->status === 'recebida') {
             return redirect()->route('ordem-compra.index')->withErrors(['db_error' => 'Esta ordem já foi recebida.']);
         }
+
+        $request->validate([
+            'boleto_data_emissao' => 'required|date',
+            'boleto_data_vencimento' => 'required|date',
+            'boleto_observacoes' => 'nullable|string',
+        ]);
 
         try {
             DB::beginTransaction();
@@ -256,9 +263,18 @@ class OrdemCompraController extends Controller
                 'data_entrega' => $oc->data_entrega ?? $hoje,
             ]);
 
+            Boleto::create([
+                'ordem_compra_id' => $oc->id,
+                'valor' => $oc->valor_total,
+                'data_emissao' => $request->boleto_data_emissao,
+                'data_vencimento' => $request->boleto_data_vencimento,
+                'observacoes' => $request->boleto_observacoes,
+                'status' => 'pendente',
+            ]);
+
             DB::commit();
 
-            return redirect()->route('ordem-compra.index')->with('success', 'Ordem de compra recebida com sucesso. O estoque foi atualizado.');
+            return redirect()->route('ordem-compra.index')->with('success', 'Ordem de compra recebida com sucesso. O estoque foi atualizado e o boleto foi gerado.');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->route('ordem-compra.index')->withErrors(['db_error' => 'Erro ao receber ordem de compra: ' . $e->getMessage()]);

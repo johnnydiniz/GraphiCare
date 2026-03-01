@@ -16,6 +16,7 @@ class Estoque extends Model
         'materia_prima_id',
         'entrada_id',
         'saida_id',
+        'perda_quebra_id',
         'data_movimentacao',
     ];
 
@@ -36,5 +37,10 @@ class Estoque extends Model
     public function entrada()
     {
         return $this->belongsTo(Entrada::class);
+    }
+
+    public function perdaQuebra()
+    {
+        return $this->belongsTo(PerdaQuebra::class);
     }
 }

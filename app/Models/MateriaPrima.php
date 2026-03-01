@@ -69,4 +69,9 @@ class MateriaPrima extends Model
         }
         return $this->estoque_atual < $this->estoque_minimo;
     }
+
+    public function perdasQuebras()
+    {
+        return $this->hasMany(PerdaQuebra::class);
+    }
 }

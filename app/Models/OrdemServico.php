@@ -73,6 +73,11 @@ class OrdemServico extends Model
         return $this->hasMany(PerdaQuebra::class);
     }
 
+    public function faturas()
+    {
+        return $this->hasMany(Fatura::class);
+    }
+
     /**
      * Calculate the total cost based on services and their quantities
      */

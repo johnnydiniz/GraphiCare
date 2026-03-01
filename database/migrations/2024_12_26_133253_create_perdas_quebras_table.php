@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id();
             $table->integer('qtde')->nullable(false);
             $table->date('data')->nullable(false);
-            $table->foreignId('componente_servico_id')->nullable(true)->constrained('componente_servicos');
-            $table->foreignId('ordem_servico_id')->nullable(true)->constrained('ordem_servicos');
+            $table->string('motivo')->nullable(false);
+            $table->text('observacoes')->nullable();
+            $table->foreignId('materia_prima_id')->constrained('materias_primas')->nullable(false);
+            $table->foreignId('componente_servico_id')->nullable()->constrained('componente_servicos');
+            $table->foreignId('ordem_servico_id')->nullable()->constrained('ordem_servicos');
             $table->timestamps();
         });
     }

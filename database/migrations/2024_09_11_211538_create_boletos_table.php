@@ -16,6 +16,8 @@ return new class extends Migration
             $table->date('data_emissao')->nullable(false);
             $table->date('data_vencimento')->nullable(false);
             $table->float('valor')->nullable(false);
+            $table->string('status')->default('pendente');
+            $table->text('observacoes')->nullable();
             $table->foreignId('ordem_compra_id')->constrained('ordem_compras');
             $table->timestamps();
         });
