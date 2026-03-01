@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Boleto;
 use App\Models\Fatura;
+use App\Models\MateriaPrima;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
@@ -72,12 +73,32 @@ class AppServiceProvider extends ServiceProvider
                 }
 
                 $notificacoes = $notificacoes->sortBy('data_vencimento')->values();
+
+                // Materiais com estoque crítico (apenas com aviso_estoque ativo)
+                $materiaisCriticos = MateriaPrima::where('ativo', true)
+                    ->where('aviso_estoque', true)
+                    ->whereNotNull('estoque_minimo')
+                    ->whereColumn('estoque_atual', '<', 'estoque_minimo')
+                    ->get();
+
+                foreach ($materiaisCriticos as $mat) {
+                    $alertasEstoque[] = [
+                        'referencia' => $mat->descricao,
+                        'estoque_atual' => $mat->estoque_atual,
+                        'estoque_minimo' => $mat->estoque_minimo,
+                    ];
+                }
             }
 
+            $alertasEstoque = $alertasEstoque ?? [];
             $temVencido = $notificacoes->contains('vencido', true);
+            $temAlerta = count($alertasEstoque) > 0;
+            $totalCount = $notificacoes->count() + count($alertasEstoque);
             $view->with('notificacoes', $notificacoes);
-            $view->with('notificacoesCount', $notificacoes->count());
+            $view->with('alertasEstoque', $alertasEstoque);
+            $view->with('notificacoesCount', $totalCount);
             $view->with('temVencido', $temVencido);
+            $view->with('temAlerta', $temAlerta);
         });
     }
 }

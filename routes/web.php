@@ -172,6 +172,11 @@ Route::middleware(['auth'])->group(function () {
     //Fluxo de Caixa
     Route::get('/fluxo-caixa', 'App\Http\Controllers\FluxoCaixaController@index')->name('fluxo-caixa.index');
 
+    //Relatórios
+    Route::get('/relatorio/ordens', 'App\Http\Controllers\RelatorioController@ordens')->name('relatorio.ordens');
+    Route::get('/relatorio/financeiro', 'App\Http\Controllers\RelatorioController@financeiro')->name('relatorio.financeiro');
+    Route::get('/relatorio/estoque', 'App\Http\Controllers\RelatorioController@estoque')->name('relatorio.estoque');
+
     //Boletos (Contas a Pagar)
     Route::get('/boleto', 'App\Http\Controllers\BoletoController@index')->name('boleto.index');
     Route::get('/boleto/inserir', 'App\Http\Controllers\BoletoController@create')->name('boleto.inserir');

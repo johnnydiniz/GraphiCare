@@ -48,8 +48,16 @@
                     <li><a class="dropdown-item small" href="{{ route('equipamento-operacional.index') }}"><i class="fa-solid fa-toolbox me-2"></i>{{ __('Machinery') }}</a></li>
                 </ul>
             </div>
-            <a class="text-dark text-decoration-none small fw-medium" href="{{ route('home') }}"><i
-                    class="fa-solid fa-square-poll-horizontal"></i> {{ __('Reports') }}</a>
+            <div class="dropdown">
+                <a class="text-dark text-decoration-none small fw-medium dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-square-poll-horizontal"></i> {{ __('Reports') }}
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item small" href="{{ route('relatorio.ordens') }}"><i class="fa-solid fa-print me-2"></i>Ordens de Serviço</a></li>
+                    <li><a class="dropdown-item small" href="{{ route('relatorio.financeiro') }}"><i class="fa-solid fa-coins me-2"></i>Financeiro</a></li>
+                    <li><a class="dropdown-item small" href="{{ route('relatorio.estoque') }}"><i class="fa-solid fa-warehouse me-2"></i>Estoque</a></li>
+                </ul>
+            </div>
         </div>
 
         <!-- Notificações e Avatar -->
@@ -59,37 +67,61 @@
                 <a class="text-dark text-decoration-none position-relative" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fa-solid fa-bell fs-5"></i>
                     @if($notificacoesCount > 0)
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill {{ $temVencido ? 'bg-danger' : 'bg-warning text-dark' }}" style="font-size: 0.65rem;">
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill {{ ($temVencido || $temAlerta) ? 'bg-danger' : 'bg-warning text-dark' }}" style="font-size: 0.65rem;">
                             {{ $notificacoesCount }}
                         </span>
                     @endif
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end shadow" style="width: 340px; max-height: 400px; overflow-y: auto;">
-                    <li class="dropdown-header fw-bold text-dark">Notificações de Vencimento</li>
-                    <li><hr class="dropdown-divider"></li>
-                    @forelse($notificacoes as $notif)
-                        <li>
-                            <a class="dropdown-item small py-2" href="{{ route($notif['rota']) }}">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="fa-solid {{ $notif['icone'] }} {{ $notif['vencido'] ? 'text-danger' : 'text-warning' }}"></i>
-                                    <div class="flex-grow-1">
-                                        <div class="fw-medium">{{ $notif['referencia'] }}</div>
-                                        <div class="text-muted" style="font-size: 0.75rem;">
-                                            R$ {{ number_format($notif['valor'], 2, ',', '.') }}
-                                            — {{ $notif['data_vencimento']->format('d/m/Y') }}
+                    @if($notificacoes->count() > 0)
+                        <li class="dropdown-header fw-bold text-dark">Vencimentos</li>
+                        @foreach($notificacoes as $notif)
+                            <li>
+                                <a class="dropdown-item small py-2" href="{{ route($notif['rota']) }}">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="fa-solid {{ $notif['icone'] }} {{ $notif['vencido'] ? 'text-danger' : 'text-warning' }}"></i>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-medium">{{ $notif['referencia'] }}</div>
+                                            <div class="text-muted" style="font-size: 0.75rem;">
+                                                R$ {{ number_format($notif['valor'], 2, ',', '.') }}
+                                                — {{ $notif['data_vencimento']->format('d/m/Y') }}
+                                            </div>
                                         </div>
+                                        @if($notif['vencido'])
+                                            <span class="badge bg-danger">Vencido</span>
+                                        @else
+                                            <span class="badge bg-warning text-dark">{{ $notif['dias'] }}d</span>
+                                        @endif
                                     </div>
-                                    @if($notif['vencido'])
-                                        <span class="badge bg-danger">Vencido</span>
-                                    @else
-                                        <span class="badge bg-warning text-dark">{{ $notif['dias'] }}d</span>
-                                    @endif
-                                </div>
-                            </a>
-                        </li>
-                    @empty
-                        <li class="text-center text-muted small py-3">Nenhum vencimento próximo</li>
-                    @endforelse
+                                </a>
+                            </li>
+                        @endforeach
+                    @endif
+                    @if(count($alertasEstoque) > 0)
+                        @if($notificacoes->count() > 0)
+                            <li><hr class="dropdown-divider"></li>
+                        @endif
+                        <li class="dropdown-header fw-bold text-dark">Estoque Crítico</li>
+                        @foreach($alertasEstoque as $alerta)
+                            <li>
+                                <a class="dropdown-item small py-2" href="{{ route('materia-prima.index') }}">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="fa-solid fa-boxes-stacked text-danger"></i>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-medium">{{ $alerta['referencia'] }}</div>
+                                            <div class="text-muted" style="font-size: 0.75rem;">
+                                                Atual: {{ $alerta['estoque_atual'] }} / Mín: {{ $alerta['estoque_minimo'] }}
+                                            </div>
+                                        </div>
+                                        <span class="badge bg-danger">Baixo</span>
+                                    </div>
+                                </a>
+                            </li>
+                        @endforeach
+                    @endif
+                    @if($notificacoes->count() === 0 && count($alertasEstoque) === 0)
+                        <li class="text-center text-muted small py-3">Nenhuma notificação</li>
+                    @endif
                     <li><hr class="dropdown-divider"></li>
                     <li>
                         <a class="dropdown-item small text-center fw-medium text-primary" href="{{ route('fluxo-caixa.index') }}">
