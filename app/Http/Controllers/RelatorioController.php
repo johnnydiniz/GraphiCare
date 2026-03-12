@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente;
 use App\Models\OrdemServico;
 use App\Models\Fatura;
 use App\Models\Boleto;
@@ -17,25 +18,35 @@ class RelatorioController extends Controller
     {
         $dataInicio = $request->input('data_inicio', Carbon::now()->startOfYear()->format('Y-m-d'));
         $dataFim = $request->input('data_fim', Carbon::now()->format('Y-m-d'));
+        $clienteId = $request->input('cliente_id');
 
-        $ordens = OrdemServico::with('cliente.pessoa')
-            ->whereBetween('created_at', [$dataInicio, Carbon::parse($dataFim)->endOfDay()])
-            ->orderByDesc('created_at')
-            ->get();
+        $query = OrdemServico::with('cliente.pessoa')
+            ->whereBetween('created_at', [$dataInicio, Carbon::parse($dataFim)->endOfDay()]);
+
+        if ($clienteId) {
+            $query->where('cliente_id', $clienteId);
+        }
+
+        $ordens = $query->orderByDesc('created_at')->get();
 
         $totalOS = $ordens->count();
         $concluidas = $ordens->where('status', 'finalizada')->count();
         $pendentes = $ordens->where('status', 'pendente')->count();
         $receitaTotal = $ordens->where('status', 'finalizada')->sum('valor_final');
 
+        $clientes = Cliente::with('pessoa')->where('ativo', true)->get()
+            ->sortBy(fn ($c) => $c->pessoa->nome_social ?? $c->pessoa->nome_registro);
+
         return view('relatorio.ordens', compact(
             'dataInicio',
             'dataFim',
+            'clienteId',
             'ordens',
             'totalOS',
             'concluidas',
             'pendentes',
-            'receitaTotal'
+            'receitaTotal',
+            'clientes'
         ));
     }
 
@@ -43,10 +54,16 @@ class RelatorioController extends Controller
     {
         $dataInicio = $request->input('data_inicio', Carbon::now()->startOfYear()->format('Y-m-d'));
         $dataFim = $request->input('data_fim', Carbon::now()->format('Y-m-d'));
+        $clienteId = $request->input('cliente_id');
 
-        $faturas = Fatura::with('ordemServico.cliente.pessoa')
-            ->whereBetween('data_vencimento', [$dataInicio, $dataFim])
-            ->get();
+        $queryFaturas = Fatura::with('ordemServico.cliente.pessoa')
+            ->whereBetween('data_vencimento', [$dataInicio, $dataFim]);
+
+        if ($clienteId) {
+            $queryFaturas->whereHas('ordemServico', fn ($q) => $q->where('cliente_id', $clienteId));
+        }
+
+        $faturas = $queryFaturas->get();
 
         $boletos = Boleto::with('ordemCompra.fornecedor.pessoa')
             ->whereBetween('data_vencimento', [$dataInicio, $dataFim])
@@ -91,15 +108,20 @@ class RelatorioController extends Controller
 
         $movimentacoes = $movimentacoes->sortByDesc('data_vencimento')->values();
 
+        $clientes = Cliente::with('pessoa')->where('ativo', true)->get()
+            ->sortBy(fn ($c) => $c->pessoa->nome_social ?? $c->pessoa->nome_registro);
+
         return view('relatorio.financeiro', compact(
             'dataInicio',
             'dataFim',
+            'clienteId',
             'totalFaturas',
             'totalBoletos',
             'totalAReceber',
             'totalAPagar',
             'saldo',
-            'movimentacoes'
+            'movimentacoes',
+            'clientes'
         ));
     }
 

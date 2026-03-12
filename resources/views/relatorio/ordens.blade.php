@@ -14,15 +14,26 @@
         <div class="px-4 pb-4">
             <div class="bg-white shadow-sm rounded-3 p-4 border border-light">
                 <form method="GET" action="{{ route('relatorio.ordens') }}" class="row g-3 align-items-end">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="data_inicio" class="form-label small fw-medium text-secondary">Data Início</label>
                         <input type="date" class="form-control" id="data_inicio" name="data_inicio" value="{{ $dataInicio }}">
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="data_fim" class="form-label small fw-medium text-secondary">Data Fim</label>
                         <input type="date" class="form-control" id="data_fim" name="data_fim" value="{{ $dataFim }}">
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
+                        <label for="cliente_id" class="form-label small fw-medium text-secondary">Cliente</label>
+                        <select class="form-select" id="cliente_id" name="cliente_id">
+                            <option value="">Todos os clientes</option>
+                            @foreach ($clientes as $cliente)
+                                <option value="{{ $cliente->id }}" {{ ($clienteId ?? '') == $cliente->id ? 'selected' : '' }}>
+                                    {{ $cliente->pessoa->nome_social ?? $cliente->pessoa->nome_registro }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3">
                         <button type="submit" class="btn btn-dark w-100">
                             <i class="fa-solid fa-filter me-2"></i>Filtrar
                         </button>
