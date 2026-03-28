@@ -25,7 +25,7 @@ class FuncionarioController extends Controller
     public function create()
     {
         $fields = (new Funcionario())->generateFields(__FUNCTION__);
-        return view('funcionario.formulario', ['title' => 'Cadastrar Funcionário', 'route' => 'funcionario.inserir', 'fields' => $fields, 'btn_label' => 'Cadastrar']);
+        return view('funcionario.formulario', ['title' => 'Cadastrar Funcionário', 'route' => 'funcionario.salvar', 'fields' => $fields, 'btn_label' => 'Cadastrar']);
     }
 
     /**
@@ -100,7 +100,7 @@ class FuncionarioController extends Controller
     public function edit(Funcionario $funcionario)
     {
         $fields = $funcionario->generateFields(__FUNCTION__);
-        return view('funcionario.formulario', ['title' => 'Editar Funcionário', 'route' => ['funcionario.editar', $funcionario->id] , 'fields' => $fields, 'btn_label' => 'Salvar']);
+        return view('funcionario.formulario', ['title' => 'Editar Funcionário', 'route' => ['funcionario.atualizar', $funcionario->id] , 'fields' => $fields, 'btn_label' => 'Salvar']);
     }
 
     /**

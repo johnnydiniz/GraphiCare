@@ -15,7 +15,7 @@ class TipoContatoController extends Controller
     {
         $tipoContatos = TipoContato::all();
         $title = 'Contact Types';
-        $route = 'tipo-contato.inserir';
+        $route = 'tipo-contato.salvar';
 
         return view('tipo-contato.index', compact('tipoContatos', 'title', 'route'));
     }
@@ -26,7 +26,7 @@ class TipoContatoController extends Controller
     public function create()
     {
         $fields = (new TipoContato())->generateFields(__FUNCTION__);
-        return view('tipo-contato.formulario', ['title' => 'Cadastrar Tipo Matéria-prima', 'route' => 'tipo-tipo-contato.inserir', 'fields' => $fields, 'btn_label' => 'Cadastrar']);
+        return view('tipo-contato.formulario', ['title' => 'Cadastrar Tipo Matéria-prima', 'route' => 'tipo-contato.salvar', 'fields' => $fields, 'btn_label' => 'Cadastrar']);
     }
 
     /**
@@ -78,7 +78,7 @@ class TipoContatoController extends Controller
     public function edit(TipoContato $tipoContato)
     {
         $fields = $tipoContato->generateFields(__FUNCTION__);
-        return view('tipo-contato.formulario', ['title' => 'Editar Matéria-prima', 'route' => ['tipo-contato.editar', $tipoContato->id] , 'fields' => $fields, 'btn_label' => 'Salvar']);
+        return view('tipo-contato.formulario', ['title' => 'Editar Matéria-prima', 'route' => ['tipo-contato.atualizar', $tipoContato->id] , 'fields' => $fields, 'btn_label' => 'Salvar']);
     }
 
     /**

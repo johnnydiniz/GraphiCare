@@ -12,7 +12,7 @@ class BoletoController extends Controller
     {
         $boletos = Boleto::with('ordemCompra.fornecedor.pessoa')->get();
         $title = 'Boletos';
-        $route = 'boleto.inserir';
+        $route = 'boleto.salvar';
         return view('boleto.index', compact('boletos', 'title', 'route'));
     }
 
@@ -20,7 +20,7 @@ class BoletoController extends Controller
     {
         return view('boleto.formulario', [
             'title' => 'Criar Boleto',
-            'route' => 'boleto.inserir',
+            'route' => 'boleto.salvar',
             'btn_label' => 'Criar',
             'defaultDates' => [
                 'data_emissao' => now()->format('Y-m-d'),
@@ -61,7 +61,7 @@ class BoletoController extends Controller
 
         return view('boleto.formulario', [
             'title' => 'Editar Boleto',
-            'route' => ['boleto.editar', $boleto->id],
+            'route' => ['boleto.atualizar', $boleto->id],
             'btn_label' => 'Salvar',
             'boleto' => $boleto,
         ]);

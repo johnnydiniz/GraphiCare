@@ -26,7 +26,7 @@ class ClienteController extends Controller
     public function create()
     {
         $fields = (new Cliente())->generateFields(__FUNCTION__);
-        return view('cliente.formulario', ['title' => 'Cadastrar Cliente', 'route' => 'cliente.inserir', 'fields' => $fields, 'btn_label' => 'Cadastrar']);
+        return view('cliente.formulario', ['title' => 'Cadastrar Cliente', 'route' => 'cliente.salvar', 'fields' => $fields, 'btn_label' => 'Cadastrar']);
     }
 
  /**
@@ -91,7 +91,7 @@ class ClienteController extends Controller
     public function edit(Cliente $cliente)
     {
         $fields = $cliente->generateFields(__FUNCTION__);
-        return view('cliente.formulario', ['title' => 'Editar Cliente', 'route' => ['cliente.editar', $cliente->id] , 'fields' => $fields, 'btn_label' => 'Salvar']);
+        return view('cliente.formulario', ['title' => 'Editar Cliente', 'route' => ['cliente.atualizar', $cliente->id] , 'fields' => $fields, 'btn_label' => 'Salvar']);
     }
 
     /**

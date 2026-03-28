@@ -43,6 +43,8 @@
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
+        "doc": "docker run --rm -v .:/data phpdoc/phpdoc:3",
+        "doc:phar": "php -d error_reporting=E_ERROR phpDocumentor.phar run",
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi",
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",

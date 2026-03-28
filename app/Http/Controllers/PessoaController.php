@@ -20,7 +20,7 @@ class PessoaController extends Controller
     {
         $pessoas = Pessoa::with(['fornecedor', 'cliente', 'funcionario'])->get();
         $title = 'People';
-        $route = 'pessoa.inserir';
+        $route = 'pessoa.salvar';
         return view('pessoa.index', compact('pessoas', 'title', 'route'));
     }
 
@@ -42,7 +42,7 @@ class PessoaController extends Controller
 
         return view('pessoa.formulario', [
             'title' => 'Cadastrar Pessoa',
-            'route' => 'pessoa.inserir',
+            'route' => 'pessoa.salvar',
             'fieldGroups' => $fieldGroups,
             'btn_label' => 'Cadastrar',
         ]);
@@ -251,7 +251,7 @@ class PessoaController extends Controller
 
         return view('pessoa.formulario', [
             'title' => 'Editar Pessoa',
-            'route' => ['pessoa.editar', $pessoa->id],
+            'route' => ['pessoa.atualizar', $pessoa->id],
             'fieldGroups' => $fieldGroups,
             'btn_label' => 'Salvar',
         ]);

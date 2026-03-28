@@ -17,7 +17,7 @@ class OrdemCompraController extends Controller
     {
         $ordensCompra = OrdemCompra::with(['fornecedor.pessoa', 'entradas.materiaPrima'])->get();
         $title = 'Ordens de Compra';
-        $route = 'ordem-compra.inserir';
+        $route = 'ordem-compra.salvar';
         return view('ordem-compra.index', compact('ordensCompra', 'title', 'route'));
     }
 
@@ -36,7 +36,7 @@ class OrdemCompraController extends Controller
 
         return view('ordem-compra.formulario', [
             'title' => 'Criar Ordem de Compra',
-            'route' => 'ordem-compra.inserir',
+            'route' => 'ordem-compra.salvar',
             'btn_label' => 'Criar',
             'fornecedores' => $fornecedores,
             'defaultDates' => $defaultDates,
@@ -111,7 +111,7 @@ class OrdemCompraController extends Controller
 
         return view('ordem-compra.formulario', [
             'title' => 'Editar Ordem de Compra',
-            'route' => ['ordem-compra.editar', $oc->id],
+            'route' => ['ordem-compra.atualizar', $oc->id],
             'btn_label' => 'Salvar',
             'ordemCompra' => $oc,
             'fornecedores' => $fornecedores,

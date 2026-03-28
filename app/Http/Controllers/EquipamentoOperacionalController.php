@@ -17,7 +17,7 @@ class EquipamentoOperacionalController extends Controller
     {
         $equipamentosOperacionais = EquipamentoOperacional::all();
         $title = 'Operational Equipments';
-        $route = 'equipamento-operacional.inserir';
+        $route = 'equipamento-operacional.salvar';
 
         return view('equipamento-operacional.index', compact('equipamentosOperacionais', 'title', 'route'));
     }
@@ -28,7 +28,7 @@ class EquipamentoOperacionalController extends Controller
     public function create()
     {
         $fields = (new EquipamentoOperacional())->generateFields(__FUNCTION__);
-        return view('equipamento-operacional.formulario', ['title' => 'Cadastrar Equipamento Operacional', 'route' => 'equipamento-operacional.inserir', 'fields' => $fields, 'btn_label' => 'Cadastrar']);
+        return view('equipamento-operacional.formulario', ['title' => 'Cadastrar Equipamento Operacional', 'route' => 'equipamento-operacional.salvar', 'fields' => $fields, 'btn_label' => 'Cadastrar']);
     }
 
     /**
@@ -88,7 +88,7 @@ class EquipamentoOperacionalController extends Controller
     public function edit(EquipamentoOperacional $equipamentoOperacional)
     {
         $fields = $equipamentoOperacional->generateFields(__FUNCTION__);
-        return view('equipamento-operacional.formulario', ['title' => 'Editar Equipamento Operacional', 'route' => ['equipamento-operacional.editar', $equipamentoOperacional->id], 'fields' => $fields, 'btn_label' => 'Salvar']);
+        return view('equipamento-operacional.formulario', ['title' => 'Editar Equipamento Operacional', 'route' => ['equipamento-operacional.atualizar', $equipamentoOperacional->id], 'fields' => $fields, 'btn_label' => 'Salvar']);
     }
 
     /**

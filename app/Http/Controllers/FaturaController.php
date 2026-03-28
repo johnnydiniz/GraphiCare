@@ -12,7 +12,7 @@ class FaturaController extends Controller
     {
         $faturas = Fatura::with('ordemServico.cliente.pessoa')->get();
         $title = 'Faturas';
-        $route = 'fatura.inserir';
+        $route = 'fatura.salvar';
         return view('fatura.index', compact('faturas', 'title', 'route'));
     }
 
@@ -20,7 +20,7 @@ class FaturaController extends Controller
     {
         return view('fatura.formulario', [
             'title' => 'Criar Fatura',
-            'route' => 'fatura.inserir',
+            'route' => 'fatura.salvar',
             'btn_label' => 'Criar',
             'defaultDates' => [
                 'data_emissao' => now()->format('Y-m-d'),
@@ -61,7 +61,7 @@ class FaturaController extends Controller
 
         return view('fatura.formulario', [
             'title' => 'Editar Fatura',
-            'route' => ['fatura.editar', $fatura->id],
+            'route' => ['fatura.atualizar', $fatura->id],
             'btn_label' => 'Salvar',
             'fatura' => $fatura,
         ]);

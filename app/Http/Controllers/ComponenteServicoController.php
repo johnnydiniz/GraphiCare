@@ -15,7 +15,7 @@ class ComponenteServicoController extends Controller
     {
         $componentesServico = ComponenteServico::with(['materiaPrima.tipoMateriaPrima', 'equipamentoOperacional'])->get();
         $title = 'Service Components';
-        $route = 'componente-servico.inserir';
+        $route = 'componente-servico.salvar';
 
         return view('componente-servico.index', compact('componentesServico', 'title', 'route'));
     }
@@ -26,7 +26,7 @@ class ComponenteServicoController extends Controller
     public function create()
     {
         $fields = (new ComponenteServico())->generateFields(__FUNCTION__);
-        return view('componente-servico.formulario', ['title' => 'Cadastrar Componente de serviço', 'route' => 'componente-servico.inserir', 'fields' => $fields, 'btn_label' => 'Cadastrar']);
+        return view('componente-servico.formulario', ['title' => 'Cadastrar Componente de serviço', 'route' => 'componente-servico.salvar', 'fields' => $fields, 'btn_label' => 'Cadastrar']);
     }
 
     /**
@@ -81,7 +81,7 @@ class ComponenteServicoController extends Controller
     public function edit(ComponenteServico $componenteServico)
     {
         $fields = $componenteServico->generateFields(__FUNCTION__);
-        return view('componente-servico.formulario', ['title' => 'Editar Componente de serviço', 'route' => ['componente-servico.editar', $componenteServico->id], 'fields' => $fields, 'btn_label' => 'Salvar']);
+        return view('componente-servico.formulario', ['title' => 'Editar Componente de serviço', 'route' => ['componente-servico.atualizar', $componenteServico->id], 'fields' => $fields, 'btn_label' => 'Salvar']);
     }
 
     /**

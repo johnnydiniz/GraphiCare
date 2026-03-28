@@ -16,7 +16,7 @@ class ServicoController extends Controller
     {
         $servicos = Servico::with('componenteServico.materiaPrima')->get();
         $title = 'Services';
-        $route = 'servico.inserir';
+        $route = 'servico.salvar';
 
         return view('servico.index', compact('servicos', 'title', 'route'));
     }
@@ -28,7 +28,7 @@ class ServicoController extends Controller
     {
         return view('servico.formulario', [
             'title' => __('Register Service'),
-            'route' => 'servico.inserir',
+            'route' => 'servico.salvar',
             'btn_label' => __('Insert'),
         ]);
     }
@@ -103,7 +103,7 @@ class ServicoController extends Controller
 
         return view('servico.formulario', [
             'title' => __('Edit Service'),
-            'route' => ['servico.editar', $servico->id],
+            'route' => ['servico.atualizar', $servico->id],
             'btn_label' => __('Save'),
             'servico' => $servico,
         ]);

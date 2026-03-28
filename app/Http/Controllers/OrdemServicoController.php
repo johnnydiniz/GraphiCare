@@ -22,7 +22,7 @@ class OrdemServicoController extends Controller
     {
         $ordensServico = OrdemServico::with(['cliente.pessoa', 'servicos', 'orcamento'])->get();
         $title = 'Orders';
-        $route = 'ordem-servico.inserir';
+        $route = 'ordem-servico.salvar';
         return view('ordem-servico.index', compact('ordensServico', 'title', 'route'));
     }
 
@@ -51,7 +51,7 @@ class OrdemServicoController extends Controller
 
         return view('ordem-servico.formulario', [
             'title' => __('Create Order'),
-            'route' => 'ordem-servico.inserir',
+            'route' => 'ordem-servico.salvar',
             'btn_label' => __('Create'),
             'clientes' => $clientes,
             'orcamentos' => $orcamentos,
@@ -140,7 +140,7 @@ class OrdemServicoController extends Controller
 
         return view('ordem-servico.formulario', [
             'title' => __('Edit Order'),
-            'route' => ['ordem-servico.editar', $ordemServico->id],
+            'route' => ['ordem-servico.atualizar', $ordemServico->id],
             'btn_label' => __('Save'),
             'ordemServico' => $ordemServico,
             'clientes' => $clientes,

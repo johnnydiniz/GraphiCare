@@ -25,7 +25,7 @@ class FornecedorController extends Controller
     public function create()
     {
         $fields = (new Fornecedor())->generateFields(__FUNCTION__);
-        return view('fornecedor.formulario', ['title' => 'Cadastrar Fornecedor', 'route' => 'fornecedor.inserir', 'fields' => $fields, 'btn_label' => 'Cadastrar']);
+        return view('fornecedor.formulario', ['title' => 'Cadastrar Fornecedor', 'route' => 'fornecedor.salvar', 'fields' => $fields, 'btn_label' => 'Cadastrar']);
     }
 
     /**
@@ -88,7 +88,7 @@ class FornecedorController extends Controller
     public function edit(Fornecedor $fornecedor)
     {
         $fields = $fornecedor->generateFields(__FUNCTION__);
-        return view('fornecedor.formulario', ['title' => 'Editar Fornecedor', 'route' => ['fornecedor.editar', $fornecedor->id] , 'fields' => $fields, 'btn_label' => 'Salvar']);
+        return view('fornecedor.formulario', ['title' => 'Editar Fornecedor', 'route' => ['fornecedor.atualizar', $fornecedor->id] , 'fields' => $fields, 'btn_label' => 'Salvar']);
     }
 
     /**

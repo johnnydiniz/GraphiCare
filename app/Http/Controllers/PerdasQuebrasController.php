@@ -14,7 +14,7 @@ class PerdasQuebrasController extends Controller
     {
         $perdasQuebras = PerdaQuebra::with('materiaPrima')->get();
         $title = 'Perdas e Quebras';
-        $route = 'perda-quebra.inserir';
+        $route = 'perda-quebra.salvar';
         return view('perda-quebra.index', compact('perdasQuebras', 'title', 'route'));
     }
 
@@ -22,7 +22,7 @@ class PerdasQuebrasController extends Controller
     {
         return view('perda-quebra.formulario', [
             'title' => 'Registrar Perda/Quebra',
-            'route' => 'perda-quebra.inserir',
+            'route' => 'perda-quebra.salvar',
             'btn_label' => 'Registrar',
             'defaultDate' => now()->format('Y-m-d'),
         ]);
@@ -76,7 +76,7 @@ class PerdasQuebrasController extends Controller
 
         return view('perda-quebra.formulario', [
             'title' => 'Editar Perda/Quebra',
-            'route' => ['perda-quebra.editar', $perdaQuebra->id],
+            'route' => ['perda-quebra.atualizar', $perdaQuebra->id],
             'btn_label' => 'Salvar',
             'perdaQuebra' => $perdaQuebra,
         ]);

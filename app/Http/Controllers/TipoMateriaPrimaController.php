@@ -15,7 +15,7 @@ class TipoMateriaPrimaController extends Controller
     {
         $tipoMateriaPrimas = TipoMateriaPrima::all();
         $title = 'Raw Material Types';
-        $route = 'tipo-materia-prima.inserir';
+        $route = 'tipo-materia-prima.salvar';
 
         return view('tipo-materia-prima.index', compact('tipoMateriaPrimas', 'title', 'route'));
     }
@@ -26,7 +26,7 @@ class TipoMateriaPrimaController extends Controller
     public function create()
     {
         $fields = (new TipoMateriaPrima())->generateFields(__FUNCTION__);
-        return view('tipo-materia-prima.formulario', ['title' => 'Cadastrar Tipo Matéria-prima', 'route' => 'tipo-materia-prima.inserir', 'fields' => $fields, 'btn_label' => 'Cadastrar']);
+        return view('tipo-materia-prima.formulario', ['title' => 'Cadastrar Tipo Matéria-prima', 'route' => 'tipo-materia-prima.salvar', 'fields' => $fields, 'btn_label' => 'Cadastrar']);
     }
 
     /**
@@ -78,7 +78,7 @@ class TipoMateriaPrimaController extends Controller
     public function edit(TipoMateriaPrima $tipoMateriaPrima)
     {
         $fields = $tipoMateriaPrima->generateFields(__FUNCTION__);
-        return view('tipo-materia-prima.formulario', ['title' => 'Editar Matéria-prima', 'route' => ['tipo-materia-prima.editar', $tipoMateriaPrima->id] , 'fields' => $fields, 'btn_label' => 'Salvar']);
+        return view('tipo-materia-prima.formulario', ['title' => 'Editar Matéria-prima', 'route' => ['tipo-materia-prima.atualizar', $tipoMateriaPrima->id] , 'fields' => $fields, 'btn_label' => 'Salvar']);
     }
 
     /**

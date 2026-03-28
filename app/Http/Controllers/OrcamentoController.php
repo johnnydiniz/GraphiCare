@@ -16,7 +16,7 @@ class OrcamentoController extends Controller
     {
         $orcamentos = Orcamento::with(['cliente.pessoa', 'servicos', 'ordensServico.servicos'])->get();
         $title = 'Quotes';
-        $route = 'orcamento.inserir';
+        $route = 'orcamento.salvar';
         return view('orcamento.index', compact('orcamentos', 'title', 'route'));
     }
 
@@ -40,7 +40,7 @@ class OrcamentoController extends Controller
 
         return view('orcamento.formulario', [
             'title' => __('Create Quote'),
-            'route' => 'orcamento.inserir',
+            'route' => 'orcamento.salvar',
             'btn_label' => __('Create'),
             'clientes' => $clientes,
             'defaultDates' => $defaultDates,
@@ -131,7 +131,7 @@ class OrcamentoController extends Controller
 
         return view('orcamento.formulario', [
             'title' => __('Edit Quote'),
-            'route' => ['orcamento.editar', $orcamento->id],
+            'route' => ['orcamento.atualizar', $orcamento->id],
             'btn_label' => __('Save'),
             'orcamento' => $orcamento,
             'clientes' => $clientes,
