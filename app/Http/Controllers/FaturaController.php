@@ -6,8 +6,18 @@ use App\Models\Fatura;
 use App\Models\OrdemServico;
 use Illuminate\Http\Request;
 
+/**
+ * Gerencia operações CRUD e ações relacionadas a faturas.
+ *
+ * @package App\Http\Controllers
+ */
 class FaturaController extends Controller
 {
+    /**
+     * Exibe a listagem de faturas.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function index()
     {
         $faturas = Fatura::with('ordemServico.cliente.pessoa')->get();
@@ -16,6 +26,11 @@ class FaturaController extends Controller
         return view('fatura.index', compact('faturas', 'title', 'route'));
     }
 
+    /**
+     * Exibe o formulário para criação de uma nova fatura.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function create()
     {
         return view('fatura.formulario', [
@@ -29,6 +44,12 @@ class FaturaController extends Controller
         ]);
     }
 
+    /**
+     * Armazena uma nova fatura no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -55,6 +76,12 @@ class FaturaController extends Controller
         }
     }
 
+    /**
+     * Exibe o formulário de edição de uma fatura existente.
+     *
+     * @param  \App\Models\Fatura  $fatura
+     * @return \Illuminate\Contracts\View\View
+     */
     public function edit(Fatura $fatura)
     {
         $fatura->load('ordemServico.cliente.pessoa');
@@ -67,6 +94,13 @@ class FaturaController extends Controller
         ]);
     }
 
+    /**
+     * Atualiza uma fatura existente no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Fatura  $fatura
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Request $request, Fatura $fatura)
     {
         $request->validate([
@@ -92,6 +126,12 @@ class FaturaController extends Controller
         }
     }
 
+    /**
+     * Remove uma fatura do banco de dados.
+     *
+     * @param  \App\Models\Fatura  $fatura
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(Fatura $fatura)
     {
         try {
@@ -102,6 +142,12 @@ class FaturaController extends Controller
         }
     }
 
+    /**
+     * Marca uma fatura como paga.
+     *
+     * @param  \App\Models\Fatura  $fatura
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function marcarPaga(Fatura $fatura)
     {
         try {
@@ -112,6 +158,11 @@ class FaturaController extends Controller
         }
     }
 
+    /**
+     * Retorna as ordens de serviço finalizadas em formato JSON para seleção via AJAX.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getOrdensServico()
     {
         $ordensServico = OrdemServico::with('cliente.pessoa')

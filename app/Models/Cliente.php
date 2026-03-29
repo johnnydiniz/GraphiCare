@@ -4,12 +4,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Modelo que representa um cliente do sistema.
+ *
+ * @package App\Models
+ * @property int $id
+ * @property bool $ativo Indica se o cliente está ativo
+ * @property int $pessoa_id ID da pessoa associada ao cliente
+ * @property string $tipo Tipo do cliente (final, representante, nao_informado)
+ * @property float|null $limite_credito Limite de crédito do cliente
+ * @property float|null $taxa_desconto Taxa de desconto aplicável ao cliente
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ */
 class Cliente extends Model
 {
     use HasFactory;
 
     /**
-     * The attributes that are mass assignable.
+     * Os atributos que podem ser atribuídos em massa.
      *
      * @var list<string>
      */
@@ -22,9 +35,10 @@ class Cliente extends Model
     ];
 
     /**
-     * The form fields to be generated
+     * Gera os campos do formulário para o recurso.
      *
-     * @var list<string>
+     * @param string $function Tipo de operação do formulário
+     * @return array<int, array<string, mixed>> Lista de campos do formulário
      */
     public function generateFields(String $function)
     {
@@ -38,7 +52,7 @@ class Cliente extends Model
     }
 
     /**
-     * Get the pessoa that owns the cliente
+     * Obtém a pessoa associada ao cliente.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

@@ -6,10 +6,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Gerencia operações CRUD e ações relacionadas a componentes de serviço.
+ *
+ * @package App\Http\Controllers
+ */
 class ComponenteServicoController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Exibe a listagem de componentes de serviço.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
@@ -21,7 +28,9 @@ class ComponenteServicoController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Exibe o formulário para criação de um novo componente de serviço.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function create()
     {
@@ -30,7 +39,10 @@ class ComponenteServicoController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Armazena um novo componente de serviço no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -68,7 +80,10 @@ class ComponenteServicoController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Exibe os detalhes de um componente de serviço específico.
+     *
+     * @param  \App\Models\ComponenteServico  $componenteServico
+     * @return void
      */
     public function show(ComponenteServico $componenteServico)
     {
@@ -76,7 +91,10 @@ class ComponenteServicoController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Exibe o formulário de edição de um componente de serviço existente.
+     *
+     * @param  \App\Models\ComponenteServico  $componenteServico
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit(ComponenteServico $componenteServico)
     {
@@ -85,7 +103,11 @@ class ComponenteServicoController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza um componente de serviço existente no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\ComponenteServico  $componenteServico
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, ComponenteServico $componenteServico)
     {
@@ -110,7 +132,10 @@ class ComponenteServicoController extends Controller
     }
 
     /**
-     * Toggle the active status of the specified resource.
+     * Alterna o status ativo/inativo de um componente de serviço.
+     *
+     * @param  \App\Models\ComponenteServico  $componenteServico
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function toggleStatus(ComponenteServico $componenteServico)
     {
@@ -124,7 +149,10 @@ class ComponenteServicoController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove um componente de serviço do banco de dados.
+     *
+     * @param  \App\Models\ComponenteServico  $componenteServico
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(ComponenteServico $componenteServico)
     {
@@ -139,6 +167,12 @@ class ComponenteServicoController extends Controller
         }
     }
 
+    /**
+     * Gera os campos de sessão a partir da requisição para reexibição do formulário.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array<string, mixed>
+     */
     public function generateSessionFields(Request $request)
     {
         $fields = [
@@ -151,7 +185,10 @@ class ComponenteServicoController extends Controller
     }
 
     /**
-     * Get active components by type (AJAX)
+     * Retorna componentes ativos filtrados por tipo em formato JSON para seleção via AJAX.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getByType(Request $request)
     {

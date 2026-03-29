@@ -7,10 +7,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Gerencia operações CRUD e ações relacionadas a funcionários.
+ *
+ * @package App\Http\Controllers
+ */
 class FuncionarioController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Exibe a listagem de funcionários.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
@@ -20,7 +27,9 @@ class FuncionarioController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Exibe o formulário para criação de um novo funcionário.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function create()
     {
@@ -29,7 +38,10 @@ class FuncionarioController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Armazena um novo funcionário no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -87,7 +99,10 @@ class FuncionarioController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Exibe os detalhes de um funcionário específico.
+     *
+     * @param  \App\Models\Funcionario  $funcionario
+     * @return void
      */
     public function show(Funcionario $funcionario)
     {
@@ -95,7 +110,10 @@ class FuncionarioController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Exibe o formulário de edição de um funcionário existente.
+     *
+     * @param  \App\Models\Funcionario  $funcionario
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit(Funcionario $funcionario)
     {
@@ -104,7 +122,11 @@ class FuncionarioController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza um funcionário existente no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Funcionario  $funcionario
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Funcionario $funcionario)
     {
@@ -135,7 +157,10 @@ class FuncionarioController extends Controller
     }
 
     /**
-     * Toggle the active status of the specified resource.
+     * Alterna o status ativo/inativo de um funcionário.
+     *
+     * @param  \App\Models\Funcionario  $funcionario
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function toggleStatus(Funcionario $funcionario)
     {
@@ -149,7 +174,10 @@ class FuncionarioController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove um funcionário do banco de dados.
+     *
+     * @param  \App\Models\Funcionario  $funcionario
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Funcionario $funcionario)
     {
@@ -164,6 +192,12 @@ class FuncionarioController extends Controller
         }
     }
 
+    /**
+     * Gera os campos de sessão a partir da requisição para reexibição do formulário.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array<string, mixed>
+     */
     public function generateSessionFields(Request $request)
     {
         $fields = [

@@ -8,10 +8,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Controller responsável pelo gerenciamento de matérias-primas.
+ *
+ * @package App\Http\Controllers
+ */
 class MateriaPrimaController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Exibe a listagem de todas as matérias-primas.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
@@ -23,7 +30,9 @@ class MateriaPrimaController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Exibe o formulário para cadastrar uma nova matéria-prima.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function create()
     {
@@ -32,7 +41,10 @@ class MateriaPrimaController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Armazena uma nova matéria-prima e seu componente de serviço associado.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -85,7 +97,10 @@ class MateriaPrimaController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Exibe a matéria-prima especificada.
+     *
+     * @param  \App\Models\MateriaPrima  $materiaPrima
+     * @return void
      */
     public function show(MateriaPrima $materiaPrima)
     {
@@ -93,7 +108,10 @@ class MateriaPrimaController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Exibe o formulário para editar a matéria-prima especificada.
+     *
+     * @param  \App\Models\MateriaPrima  $materiaPrima
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit(MateriaPrima $materiaPrima)
     {
@@ -102,7 +120,11 @@ class MateriaPrimaController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza a matéria-prima especificada e seu componente de serviço associado.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\MateriaPrima  $materiaPrima
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, MateriaPrima $materiaPrima)
     {
@@ -138,7 +160,10 @@ class MateriaPrimaController extends Controller
     }
 
     /**
-     * Toggle the active status of the specified resource.
+     * Alterna o status ativo da matéria-prima especificada.
+     *
+     * @param  \App\Models\MateriaPrima  $materiaPrima
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function toggleStatus(MateriaPrima $materiaPrima)
     {
@@ -152,7 +177,10 @@ class MateriaPrimaController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove a matéria-prima especificada do banco de dados.
+     *
+     * @param  \App\Models\MateriaPrima  $materiaPrima
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(MateriaPrima $materiaPrima)
     {
@@ -167,6 +195,12 @@ class MateriaPrimaController extends Controller
         }
     }
 
+    /**
+     * Gera um array de valores dos campos da requisição para dados flash da sessão.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array<string, mixed>
+     */
     public function generateSessionFields(Request $request)
     {
         $fields = [

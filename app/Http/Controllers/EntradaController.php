@@ -5,10 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Entrada;
 use Illuminate\Http\Request;
 
+/**
+ * Gerencia operações CRUD relacionadas a entradas de estoque.
+ *
+ * @package App\Http\Controllers
+ */
 class EntradaController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Exibe a listagem de entradas.
+     *
+     * @return void
      */
     public function index()
     {
@@ -16,7 +23,9 @@ class EntradaController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Exibe o formulário para criação de uma nova entrada.
+     *
+     * @return void
      */
     public function create()
     {
@@ -24,7 +33,10 @@ class EntradaController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Armazena uma nova entrada no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
      */
     public function store(Request $request)
     {
@@ -32,7 +44,10 @@ class EntradaController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Exibe os detalhes de uma entrada específica.
+     *
+     * @param  \App\Models\Entrada  $entrada
+     * @return void
      */
     public function show(Entrada $entrada)
     {
@@ -40,7 +55,10 @@ class EntradaController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Exibe o formulário de edição de uma entrada existente.
+     *
+     * @param  \App\Models\Entrada  $entrada
+     * @return void
      */
     public function edit(Entrada $entrada)
     {
@@ -48,7 +66,11 @@ class EntradaController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza uma entrada existente no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Entrada  $entrada
+     * @return void
      */
     public function update(Request $request, Entrada $entrada)
     {
@@ -56,7 +78,10 @@ class EntradaController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove uma entrada do banco de dados.
+     *
+     * @param  \App\Models\Entrada  $entrada
+     * @return void
      */
     public function destroy(Entrada $entrada)
     {

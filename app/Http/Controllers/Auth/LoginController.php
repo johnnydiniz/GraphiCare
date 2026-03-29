@@ -7,8 +7,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Controlador responsável pela autenticação de usuários.
+ *
+ * @package App\Http\Controllers\Auth
+ */
 class LoginController extends Controller
 {
+    /**
+     * Exibe o formulário de login ou redireciona se já autenticado.
+     *
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     */
     public function login()
     {
         $loader = app('translator')->getLoader();
@@ -22,6 +32,12 @@ class LoginController extends Controller
         return redirect()->intended('/home');
     }
 
+    /**
+     * Realiza a autenticação do usuário.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([
@@ -40,6 +56,12 @@ class LoginController extends Controller
         ]);
     }
 
+    /**
+     * Realiza o logout do usuário e invalida a sessão.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function logout(Request $request)
     {
         Auth::logout();

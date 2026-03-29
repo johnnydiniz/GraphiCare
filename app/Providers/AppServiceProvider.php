@@ -10,10 +10,17 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Provedor de serviços da aplicação.
+ *
+ * @package App\Providers
+ */
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * Registra quaisquer serviços da aplicação.
+     *
+     * @return void
      */
     public function register(): void
     {
@@ -21,7 +28,9 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Bootstrap any application services.
+     * Inicializa quaisquer serviços da aplicação.
+     *
+     * @return void
      */
     public function boot(): void
     {

@@ -11,8 +11,18 @@ use App\Models\MateriaPrima;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Controller responsável pelo gerenciamento de ordens de compra.
+ *
+ * @package App\Http\Controllers
+ */
 class OrdemCompraController extends Controller
 {
+    /**
+     * Exibe a listagem de todas as ordens de compra.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function index()
     {
         $ordensCompra = OrdemCompra::with(['fornecedor.pessoa', 'entradas.materiaPrima'])->get();
@@ -21,6 +31,11 @@ class OrdemCompraController extends Controller
         return view('ordem-compra.index', compact('ordensCompra', 'title', 'route'));
     }
 
+    /**
+     * Exibe o formulário para criar uma nova ordem de compra.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function create()
     {
         $fornecedores = Fornecedor::with('pessoa')
@@ -43,6 +58,12 @@ class OrdemCompraController extends Controller
         ]);
     }
 
+    /**
+     * Armazena uma nova ordem de compra com seus itens de entrada.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -94,6 +115,12 @@ class OrdemCompraController extends Controller
         }
     }
 
+    /**
+     * Exibe o formulário para editar a ordem de compra especificada.
+     *
+     * @param  \App\Models\OrdemCompra  $oc
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     */
     public function edit(OrdemCompra $oc)
     {
         if ($oc->status === 'recebida') {
@@ -118,6 +145,13 @@ class OrdemCompraController extends Controller
         ]);
     }
 
+    /**
+     * Atualiza a ordem de compra especificada e substitui seus itens de entrada.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\OrdemCompra  $oc
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Request $request, OrdemCompra $oc)
     {
         if ($oc->status === 'recebida') {
@@ -173,6 +207,12 @@ class OrdemCompraController extends Controller
         }
     }
 
+    /**
+     * Remove a ordem de compra especificada e seus itens de entrada.
+     *
+     * @param  \App\Models\OrdemCompra  $oc
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(OrdemCompra $oc)
     {
         if ($oc->status === 'recebida') {
@@ -188,6 +228,12 @@ class OrdemCompraController extends Controller
         }
     }
 
+    /**
+     * Alterna o status ativo da ordem de compra especificada.
+     *
+     * @param  \App\Models\OrdemCompra  $oc
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function toggleStatus(OrdemCompra $oc)
     {
         try {
@@ -199,6 +245,11 @@ class OrdemCompraController extends Controller
         }
     }
 
+    /**
+     * Obtém todas as matérias-primas ativas em JSON para preenchimento de dropdown.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getMateriasPrimas()
     {
         $materiasPrimas = MateriaPrima::where('ativo', true)->get()->map(function ($mp) {
@@ -213,6 +264,13 @@ class OrdemCompraController extends Controller
         return response()->json($materiasPrimas);
     }
 
+    /**
+     * Recebe uma ordem de compra, atualizando níveis de estoque, custos médios e gerando um boleto.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\OrdemCompra  $oc
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function receber(Request $request, OrdemCompra $oc)
     {
         if ($oc->status === 'recebida') {

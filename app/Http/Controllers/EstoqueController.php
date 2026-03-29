@@ -5,10 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Estoque;
 use Illuminate\Http\Request;
 
+/**
+ * Gerencia operações CRUD relacionadas ao estoque.
+ *
+ * @package App\Http\Controllers
+ */
 class EstoqueController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Exibe a listagem de itens do estoque.
+     *
+     * @return void
      */
     public function index()
     {
@@ -16,7 +23,9 @@ class EstoqueController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Exibe o formulário para criação de um novo item de estoque.
+     *
+     * @return void
      */
     public function create()
     {
@@ -24,7 +33,10 @@ class EstoqueController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Armazena um novo item de estoque no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
      */
     public function store(Request $request)
     {
@@ -32,7 +44,10 @@ class EstoqueController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Exibe os detalhes de um item de estoque específico.
+     *
+     * @param  \App\Models\Estoque  $estoque
+     * @return void
      */
     public function show(Estoque $estoque)
     {
@@ -40,7 +55,10 @@ class EstoqueController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Exibe o formulário de edição de um item de estoque existente.
+     *
+     * @param  \App\Models\Estoque  $estoque
+     * @return void
      */
     public function edit(Estoque $estoque)
     {
@@ -48,7 +66,11 @@ class EstoqueController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza um item de estoque existente no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Estoque  $estoque
+     * @return void
      */
     public function update(Request $request, Estoque $estoque)
     {
@@ -56,7 +78,10 @@ class EstoqueController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove um item de estoque do banco de dados.
+     *
+     * @param  \App\Models\Estoque  $estoque
+     * @return void
      */
     public function destroy(Estoque $estoque)
     {

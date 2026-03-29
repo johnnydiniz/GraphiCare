@@ -7,8 +7,19 @@ use App\Models\Boleto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
+/**
+ * Gerencia a exibição do fluxo de caixa com receitas, despesas e movimentações.
+ *
+ * @package App\Http\Controllers
+ */
 class FluxoCaixaController extends Controller
 {
+    /**
+     * Exibe o painel de fluxo de caixa com KPIs, gráficos e movimentações recentes.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\View\View
+     */
     public function index(Request $request)
     {
         $dataInicio = $request->input('data_inicio', Carbon::now()->startOfYear()->format('Y-m-d'));

@@ -7,10 +7,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Gerencia operações CRUD e ações relacionadas a fornecedores.
+ *
+ * @package App\Http\Controllers
+ */
 class FornecedorController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Exibe a listagem de fornecedores.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
@@ -20,7 +27,9 @@ class FornecedorController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Exibe o formulário para criação de um novo fornecedor.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function create()
     {
@@ -29,7 +38,10 @@ class FornecedorController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Armazena um novo fornecedor no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -75,7 +87,10 @@ class FornecedorController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Exibe os detalhes de um fornecedor específico.
+     *
+     * @param  \App\Models\Fornecedor  $fornecedor
+     * @return void
      */
     public function show(Fornecedor $fornecedor)
     {
@@ -83,7 +98,10 @@ class FornecedorController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Exibe o formulário de edição de um fornecedor existente.
+     *
+     * @param  \App\Models\Fornecedor  $fornecedor
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit(Fornecedor $fornecedor)
     {
@@ -92,7 +110,11 @@ class FornecedorController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza um fornecedor existente no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Fornecedor  $fornecedor
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Fornecedor $fornecedor)
     {
@@ -123,7 +145,10 @@ class FornecedorController extends Controller
     }
 
     /**
-     * Toggle the active status of the specified resource.
+     * Alterna o status ativo/inativo de um fornecedor.
+     *
+     * @param  \App\Models\Fornecedor  $fornecedor
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function toggleStatus(Fornecedor $fornecedor)
     {
@@ -137,7 +162,10 @@ class FornecedorController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove um fornecedor do banco de dados.
+     *
+     * @param  \App\Models\Fornecedor  $fornecedor
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Fornecedor $fornecedor)
     {
@@ -152,6 +180,12 @@ class FornecedorController extends Controller
         }
     }
 
+    /**
+     * Gera os campos de sessão a partir da requisição para reexibição do formulário.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array<string, mixed>
+     */
     public function generateSessionFields(Request $request)
     {
         $fields = [

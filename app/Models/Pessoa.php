@@ -4,11 +4,29 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+/**
+ * Representa uma pessoa (física ou jurídica) que pode ser funcionário, cliente ou fornecedor.
+ *
+ * @package App\Models
+ * @property int $id
+ * @property bool $ativo Indica se a pessoa está ativa
+ * @property string $tipo Tipo de pessoa (física ou jurídica)
+ * @property string $login Login de acesso ao sistema
+ * @property string $senha Senha de acesso ao sistema
+ * @property string $cpf_cnpj CPF ou CNPJ da pessoa
+ * @property string $nome_registro Nome de registro (razão social ou nome completo)
+ * @property string|null $nome_social Nome social ou nome fantasia
+ * @property int|null $endereco_id ID do endereço associado
+ * @property string|null $escolaridade Nível de escolaridade
+ * @property string|null $data_nascimento Data de nascimento
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ */
 class Pessoa extends Authenticatable
 {
     use HasFactory;
     /**
-     * The attributes that are mass assignable.
+     * Os atributos que podem ser atribuídos em massa.
      *
      * @var list<string>
      */
@@ -29,6 +47,12 @@ class Pessoa extends Authenticatable
         'endereco_id' => null,
     ];
 
+    /**
+     * Gera os campos do formulário para o recurso.
+     *
+     * @param string $function Tipo de operação do formulário
+     * @return array<int, array<string, mixed>> Lista de campos do formulário
+     */
     public function generateFields(String $function)
     {
         $fields = [
@@ -47,7 +71,7 @@ class Pessoa extends Authenticatable
     }
 
     /**
-     * The attributes that should be hidden for serialization.
+     * Os atributos que devem ser ocultados na serialização.
      *
      * @var list<string>
      */
@@ -56,11 +80,11 @@ class Pessoa extends Authenticatable
         'remember_token',
     ];
 
-/**
- * Get the attributes that should be cast.
- *
- * @return array<string, string>
- */
+    /**
+     * Obtém os atributos que devem ser convertidos.
+     *
+     * @return array<string, string>
+     */
     protected function casts(): array
     {
         return [
@@ -69,31 +93,61 @@ class Pessoa extends Authenticatable
         ];
     }
 
+    /**
+     * Obtém a senha para autenticação.
+     *
+     * @return string
+     */
     public function getAuthPassword()
     {
         return $this->senha;
     }
 
+    /**
+     * Obtém o funcionário associado à pessoa.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function funcionario()
     {
         return $this->hasOne(Funcionario::class);
     }
 
+    /**
+     * Obtém o cliente associado à pessoa.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function cliente()
     {
         return $this->hasOne(Cliente::class);
     }
 
+    /**
+     * Obtém o fornecedor associado à pessoa.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function fornecedor()
     {
         return $this->hasOne(Fornecedor::class);
     }
 
+    /**
+     * Obtém o endereço associado à pessoa.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function endereco()
     {
         return $this->belongsTo(Endereco::class);
     }
 
+    /**
+     * Obtém os contatos da pessoa.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function contatos()
     {
         return $this->hasMany(Contato::class);

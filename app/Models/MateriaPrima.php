@@ -5,11 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Representa uma matéria-prima utilizada na produção.
+ *
+ * @package App\Models
+ * @property int $id
+ * @property bool $ativo Indica se a matéria-prima está ativa
+ * @property int $tipo_materia_prima_id ID do tipo de matéria-prima
+ * @property string $descricao Descrição da matéria-prima
+ * @property float $custo_medio Custo médio unitário
+ * @property float $estoque_atual Quantidade atual em estoque
+ * @property bool $aviso_estoque Indica se o aviso de estoque mínimo está ativado
+ * @property float|null $estoque_minimo Quantidade mínima de estoque
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ */
 class MateriaPrima extends Model
 {
     use HasFactory;
     /**
-     * The attributes that are mass assignable.
+     * Os atributos que podem ser atribuídos em massa.
      *
      * @var list<string>
      */
@@ -26,9 +41,10 @@ class MateriaPrima extends Model
     protected $table = 'materias_primas';
 
     /**
-     * The form fields to be generated
+     * Gera os campos do formulário para o recurso.
      *
-     * @var list<string>
+     * @param string $function Tipo de operação do formulário
+     * @return array<int, array<string, mixed>> Lista de campos do formulário
      */
     public function generateFields(String $function)
     {
@@ -50,7 +66,7 @@ class MateriaPrima extends Model
     }
 
     /**
-     * Get the tipoMateriaPrima that owns the MateriaPrima
+     * Obtém o tipo de matéria-prima associado.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -60,7 +76,9 @@ class MateriaPrima extends Model
     }
 
     /**
-     * Verifica se o estoque está abaixo do mínimo
+     * Verifica se o estoque está abaixo do mínimo.
+     *
+     * @return bool
      */
     public function estoqueAbaixoMinimo(): bool
     {
@@ -70,6 +88,11 @@ class MateriaPrima extends Model
         return $this->estoque_atual < $this->estoque_minimo;
     }
 
+    /**
+     * Obtém as perdas e quebras associadas à matéria-prima.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function perdasQuebras()
     {
         return $this->hasMany(PerdaQuebra::class);

@@ -21,6 +21,13 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /var/www
 
+RUN mkdir -p /var/www/storage/framework/views \
+    /var/www/storage/framework/cache \
+    /var/www/storage/framework/sessions \
+    /var/www/storage/logs \
+    /var/www/bootstrap/cache \
+    && chown -R www-data:www-data /var/www
+
 EXPOSE 9000
 
-CMD ["php-fpm"]
+CMD ["sh", "-c", "chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache && php-fpm"]

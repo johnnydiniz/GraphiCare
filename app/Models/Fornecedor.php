@@ -4,6 +4,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Representa um fornecedor de produtos e/ou serviços.
+ *
+ * @package App\Models
+ * @property int $id
+ * @property bool $ativo Indica se o fornecedor está ativo
+ * @property int $pessoa_id ID da pessoa associada ao fornecedor
+ * @property string $tipo Tipo de fornecedor (produtos, serviços, produtos e serviços)
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ */
 class Fornecedor extends Model
 {
     use HasFactory;
@@ -11,7 +22,7 @@ class Fornecedor extends Model
     protected $table = 'fornecedores';
 
     /**
-     * The attributes that are mass assignable.
+     * Os atributos que podem ser atribuídos em massa.
      *
      * @var list<string>
      */
@@ -22,9 +33,10 @@ class Fornecedor extends Model
     ];
 
     /**
-     * The form fields to be generated
+     * Gera os campos do formulário para o recurso.
      *
-     * @var list<string>
+     * @param string $function Tipo de operação do formulário
+     * @return array<int, array<string, mixed>> Lista de campos do formulário
      */
     public function generateFields(String $function)
     {
@@ -36,7 +48,7 @@ class Fornecedor extends Model
     }
 
     /**
-     * Get the pessoa that owns the Fornecedor
+     * Obtém a pessoa associada ao fornecedor.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -45,6 +57,11 @@ class Fornecedor extends Model
         return $this->belongsTo(Pessoa::class, 'pessoa_id');
     }
 
+    /**
+     * Obtém as ordens de compra do fornecedor.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function ordensCompra()
     {
         return $this->hasMany(OrdemCompra::class);

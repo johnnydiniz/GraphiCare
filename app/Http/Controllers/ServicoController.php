@@ -7,10 +7,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Controlador responsável pelo gerenciamento de serviços.
+ *
+ * @package App\Http\Controllers
+ */
 class ServicoController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Exibe a listagem do recurso.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
@@ -22,7 +29,9 @@ class ServicoController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Exibe o formulário para criação de um novo recurso.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function create()
     {
@@ -34,7 +43,10 @@ class ServicoController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Armazena um recurso recém-criado no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -87,7 +99,10 @@ class ServicoController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Exibe o recurso especificado.
+     *
+     * @param  \App\Models\Servico  $servico
+     * @return void
      */
     public function show(Servico $servico)
     {
@@ -95,7 +110,10 @@ class ServicoController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Exibe o formulário para edição do recurso especificado.
+     *
+     * @param  \App\Models\Servico  $servico
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit(Servico $servico)
     {
@@ -110,7 +128,11 @@ class ServicoController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza o recurso especificado no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Servico  $servico
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Servico $servico)
     {
@@ -163,7 +185,10 @@ class ServicoController extends Controller
     }
 
     /**
-     * Toggle the active status of the specified resource.
+     * Alterna o status ativo do recurso especificado.
+     *
+     * @param  \App\Models\Servico  $servico
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function toggleStatus(Servico $servico)
     {
@@ -177,7 +202,10 @@ class ServicoController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove o recurso especificado do banco de dados.
+     *
+     * @param  \App\Models\Servico  $servico
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Servico $servico)
     {

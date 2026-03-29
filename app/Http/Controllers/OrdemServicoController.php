@@ -13,10 +13,17 @@ use App\Models\PerdaQuebra;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Controller responsável pelo gerenciamento de ordens de serviço.
+ *
+ * @package App\Http\Controllers
+ */
 class OrdemServicoController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Exibe a listagem de todas as ordens de serviço.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
@@ -27,7 +34,10 @@ class OrdemServicoController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Exibe o formulário para criar uma nova ordem de serviço, opcionalmente pré-preenchido a partir de um orçamento.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\View\View
      */
     public function create(Request $request)
     {
@@ -61,7 +71,10 @@ class OrdemServicoController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Armazena uma nova ordem de serviço com seus serviços associados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -123,7 +136,10 @@ class OrdemServicoController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Exibe o formulário para editar a ordem de serviço especificada.
+     *
+     * @param  \App\Models\OrdemServico  $ordemServico
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit(OrdemServico $ordemServico)
     {
@@ -149,7 +165,11 @@ class OrdemServicoController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza a ordem de serviço especificada e sincroniza seus serviços associados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\OrdemServico  $ordemServico
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, OrdemServico $ordemServico)
     {
@@ -210,7 +230,10 @@ class OrdemServicoController extends Controller
     }
 
     /**
-     * Toggle the active status of the specified resource.
+     * Alterna o status ativo da ordem de serviço especificada.
+     *
+     * @param  \App\Models\OrdemServico  $ordemServico
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function toggleStatus(OrdemServico $ordemServico)
     {
@@ -224,7 +247,10 @@ class OrdemServicoController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove a ordem de serviço especificada e desvincula seus serviços.
+     *
+     * @param  \App\Models\OrdemServico  $ordemServico
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(OrdemServico $ordemServico)
     {
@@ -238,7 +264,10 @@ class OrdemServicoController extends Controller
     }
 
     /**
-     * Print production view
+     * Exibe a visualização imprimível de produção da ordem de serviço especificada.
+     *
+     * @param  \App\Models\OrdemServico  $ordemServico
+     * @return \Illuminate\Contracts\View\View
      */
     public function printProducao(OrdemServico $ordemServico)
     {
@@ -251,7 +280,10 @@ class OrdemServicoController extends Controller
     }
 
     /**
-     * Print admin view
+     * Exibe a visualização imprimível administrativa da ordem de serviço especificada com detalhes completos dos componentes.
+     *
+     * @param  \App\Models\OrdemServico  $ordemServico
+     * @return \Illuminate\Contracts\View\View
      */
     public function printAdmin(OrdemServico $ordemServico)
     {
@@ -265,7 +297,9 @@ class OrdemServicoController extends Controller
     }
 
     /**
-     * Get all active services for the dropdown (JSON)
+     * Obtém todos os serviços ativos com dados de disponibilidade de estoque em JSON para preenchimento de dropdown.
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getServicos()
     {
@@ -297,7 +331,10 @@ class OrdemServicoController extends Controller
     }
 
     /**
-     * Start an order (set status to em_andamento)
+     * Inicia uma ordem de serviço pendente alterando seu status para em andamento.
+     *
+     * @param  \App\Models\OrdemServico  $ordemServico
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function iniciar(OrdemServico $ordemServico)
     {
@@ -318,7 +355,11 @@ class OrdemServicoController extends Controller
     }
 
     /**
-     * Finish an order (set status to finalizada, deduct stock, record losses)
+     * Finaliza uma ordem de serviço em andamento, deduzindo estoque, registrando perdas e gerando uma fatura.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\OrdemServico  $ordemServico
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function finalizar(Request $request, OrdemServico $ordemServico)
     {
@@ -408,7 +449,10 @@ class OrdemServicoController extends Controller
     }
 
     /**
-     * Get material components for an order (JSON) - for the finalization modal
+     * Obtém os componentes materiais de uma ordem de serviço em JSON para o modal de finalização.
+     *
+     * @param  \App\Models\OrdemServico  $ordemServico
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getComponentes(OrdemServico $ordemServico)
     {
@@ -447,7 +491,10 @@ class OrdemServicoController extends Controller
     }
 
     /**
-     * Get services from a specific orcamento (JSON), with remaining quantities
+     * Obtém os serviços de um orçamento específico em JSON, incluindo quantidades remanescentes após consumo por ordens existentes.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getOrcamentoServicos($id)
     {

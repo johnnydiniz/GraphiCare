@@ -12,8 +12,19 @@ use App\Models\PerdaQuebra;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
+/**
+ * Controlador responsável pela geração de relatórios do sistema.
+ *
+ * @package App\Http\Controllers
+ */
 class RelatorioController extends Controller
 {
+    /**
+     * Gera o relatório de ordens de serviço.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\View\View
+     */
     public function ordens(Request $request)
     {
         $dataInicio = $request->input('data_inicio', Carbon::now()->startOfYear()->format('Y-m-d'));
@@ -50,6 +61,12 @@ class RelatorioController extends Controller
         ));
     }
 
+    /**
+     * Gera o relatório financeiro com faturas e boletos.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\View\View
+     */
     public function financeiro(Request $request)
     {
         $dataInicio = $request->input('data_inicio', Carbon::now()->startOfYear()->format('Y-m-d'));
@@ -125,6 +142,12 @@ class RelatorioController extends Controller
         ));
     }
 
+    /**
+     * Gera o relatório de movimentações de estoque.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\View\View
+     */
     public function estoque(Request $request)
     {
         $dataInicio = $request->input('data_inicio', Carbon::now()->startOfYear()->format('Y-m-d'));

@@ -6,8 +6,18 @@ use App\Models\Boleto;
 use App\Models\OrdemCompra;
 use Illuminate\Http\Request;
 
+/**
+ * Gerencia operações CRUD e ações relacionadas a boletos.
+ *
+ * @package App\Http\Controllers
+ */
 class BoletoController extends Controller
 {
+    /**
+     * Exibe a listagem de boletos.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function index()
     {
         $boletos = Boleto::with('ordemCompra.fornecedor.pessoa')->get();
@@ -16,6 +26,11 @@ class BoletoController extends Controller
         return view('boleto.index', compact('boletos', 'title', 'route'));
     }
 
+    /**
+     * Exibe o formulário para criação de um novo boleto.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function create()
     {
         return view('boleto.formulario', [
@@ -29,6 +44,12 @@ class BoletoController extends Controller
         ]);
     }
 
+    /**
+     * Armazena um novo boleto no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -55,6 +76,12 @@ class BoletoController extends Controller
         }
     }
 
+    /**
+     * Exibe o formulário de edição de um boleto existente.
+     *
+     * @param  \App\Models\Boleto  $boleto
+     * @return \Illuminate\Contracts\View\View
+     */
     public function edit(Boleto $boleto)
     {
         $boleto->load('ordemCompra.fornecedor.pessoa');
@@ -67,6 +94,13 @@ class BoletoController extends Controller
         ]);
     }
 
+    /**
+     * Atualiza um boleto existente no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Boleto  $boleto
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Request $request, Boleto $boleto)
     {
         $request->validate([
@@ -92,6 +126,12 @@ class BoletoController extends Controller
         }
     }
 
+    /**
+     * Remove um boleto do banco de dados.
+     *
+     * @param  \App\Models\Boleto  $boleto
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(Boleto $boleto)
     {
         try {
@@ -102,6 +142,12 @@ class BoletoController extends Controller
         }
     }
 
+    /**
+     * Marca um boleto como pago.
+     *
+     * @param  \App\Models\Boleto  $boleto
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function marcarPago(Boleto $boleto)
     {
         try {
@@ -112,6 +158,11 @@ class BoletoController extends Controller
         }
     }
 
+    /**
+     * Retorna as ordens de compra recebidas em formato JSON para seleção via AJAX.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getOrdensCompra()
     {
         $ordensCompra = OrdemCompra::with('fornecedor.pessoa')

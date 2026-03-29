@@ -5,11 +5,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Modelo que representa um componente de serviço, podendo ser material ou serviço.
+ *
+ * @package App\Models
+ * @property int $id
+ * @property bool $ativo Indica se o componente está ativo
+ * @property string $tipo Tipo do componente (material ou serviço)
+ * @property string $descricao Descrição do componente de serviço
+ * @property int|null $materia_prima_id ID da matéria-prima associada
+ * @property int|null $equipamento_operacional_id ID do equipamento operacional associado
+ * @property float|null $custo_operacional Custo operacional do componente
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ */
 class ComponenteServico extends Model
 {
     use HasFactory;
     /**
-     * The attributes that are mass assignable.
+     * Os atributos que podem ser atribuídos em massa.
      *
      * @var list<string>
      */
@@ -25,9 +39,10 @@ class ComponenteServico extends Model
     protected $table = 'componente_servicos';
 
     /**
-     * The form fields to be generated
+     * Gera os campos do formulário para o recurso.
      *
-     * @var list<string>
+     * @param string $function Tipo de operação do formulário
+     * @return array<int, array<string, mixed>> Lista de campos do formulário
      */
     public function generateFields(String $function)
     {
@@ -54,7 +69,7 @@ class ComponenteServico extends Model
     }
 
     /**
-     * Get the MateriaPrima that owns the ComponenteServico
+     * Obtém a matéria-prima associada ao componente de serviço.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -64,7 +79,7 @@ class ComponenteServico extends Model
     }
 
     /**
-     * Get the EquipamentoOperacional that owns the ComponenteServico
+     * Obtém o equipamento operacional associado ao componente de serviço.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -74,7 +89,9 @@ class ComponenteServico extends Model
     }
 
     /**
-     * The relationship with Servico
+     * Obtém os serviços associados a este componente de serviço.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function servico()
     {

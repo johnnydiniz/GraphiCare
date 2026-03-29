@@ -5,10 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Contato;
 use Illuminate\Http\Request;
 
+/**
+ * Gerencia operações CRUD relacionadas a contatos.
+ *
+ * @package App\Http\Controllers
+ */
 class ContatoController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Exibe a listagem de contatos.
+     *
+     * @return void
      */
     public function index()
     {
@@ -16,7 +23,9 @@ class ContatoController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Exibe o formulário para criação de um novo contato.
+     *
+     * @return void
      */
     public function create()
     {
@@ -24,7 +33,10 @@ class ContatoController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Armazena um novo contato no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
      */
     public function store(Request $request)
     {
@@ -32,7 +44,10 @@ class ContatoController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Exibe os detalhes de um contato específico.
+     *
+     * @param  \App\Models\Contato  $contato
+     * @return void
      */
     public function show(Contato $contato)
     {
@@ -40,7 +55,10 @@ class ContatoController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Exibe o formulário de edição de um contato existente.
+     *
+     * @param  \App\Models\Contato  $contato
+     * @return void
      */
     public function edit(Contato $contato)
     {
@@ -48,7 +66,11 @@ class ContatoController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza um contato existente no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Contato  $contato
+     * @return void
      */
     public function update(Request $request, Contato $contato)
     {
@@ -56,7 +78,10 @@ class ContatoController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove um contato do banco de dados.
+     *
+     * @param  \App\Models\Contato  $contato
+     * @return void
      */
     public function destroy(Contato $contato)
     {

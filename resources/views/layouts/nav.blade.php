@@ -130,12 +130,39 @@
                     </li>
                 </ul>
             </div>
-            <!-- Avatar -->
-            <a class="text-dark text-decoration-none small fw-medium" href="{{ route('home') }}">
-                <div class="rounded-circle overflow-hidden"
-                    style="width: 40px; height: 40px; background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCzkehLwdOwFIvR47ve53EgzDuFZmWUx1kINKGEfd7I9fJsundC2rIrAUCX01tDKfQCBxSvKEFA7wiW1pZ4tq_ciOPpxVko3NTK4NRC4wyvquY82ynCZAjFLtA5axPDIT2XggKPEkfe4i3KHJ7v7cCETqXJTTGS4tlJpIiz-DLDtynSKn8r7Ht8HeDst3r4r-Fa11RYVdJRDVoZhZVYdqdlOjBKHGdEc0jeeHZ13mnHP6VoDy2aQ1aYbYTdBUa8KMaNKOj6XuJMoKdG'); background-size: cover; background-position: center;">
-                </div>
-            </a>
+            <!-- Avatar com Iniciais -->
+            <div class="dropdown">
+                <a class="text-decoration-none" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center"
+                        style="width: 40px; height: 40px; background-color: #4a5568; color: #fff; font-size: 0.85rem; font-weight: 600;">
+                        @php
+                            $words = explode(' ', Auth::user()->nome_registro);
+                            $initials = strtoupper(substr($words[0], 0, 1));
+                            if (count($words) > 1) {
+                                $initials .= strtoupper(substr(end($words), 0, 1));
+                            }
+                        @endphp
+                        {{ $initials }}
+                    </div>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow">
+                    <li class="dropdown-header fw-bold text-dark">{{ Auth::user()->nome_registro }}</li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a class="dropdown-item small" href="{{ route('perfil.index') }}">
+                            <i class="fa-solid fa-user me-2"></i>Perfil
+                        </a>
+                    </li>
+                    <li>
+                        <form method="POST" action="{{ route('sair') }}">
+                            @csrf
+                            <button type="submit" class="dropdown-item small">
+                                <i class="fa-solid fa-right-from-bracket me-2"></i>Sair
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </nav>

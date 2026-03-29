@@ -7,10 +7,17 @@ use App\Models\Cliente;
 use App\Models\Servico;
 use Illuminate\Http\Request;
 
+/**
+ * Controller responsável pelo gerenciamento de orçamentos.
+ *
+ * @package App\Http\Controllers
+ */
 class OrcamentoController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Exibe a listagem de todos os orçamentos.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
@@ -21,7 +28,9 @@ class OrcamentoController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Exibe o formulário para criar um novo orçamento.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function create()
     {
@@ -48,7 +57,10 @@ class OrcamentoController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Armazena um novo orçamento com seus serviços associados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -108,7 +120,10 @@ class OrcamentoController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Exibe o orçamento especificado.
+     *
+     * @param  \App\Models\Orcamento  $orcamento
+     * @return void
      */
     public function show(Orcamento $orcamento)
     {
@@ -116,7 +131,10 @@ class OrcamentoController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Exibe o formulário para editar o orçamento especificado.
+     *
+     * @param  \App\Models\Orcamento  $orcamento
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit(Orcamento $orcamento)
     {
@@ -139,7 +157,11 @@ class OrcamentoController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza o orçamento especificado e sincroniza seus serviços associados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Orcamento  $orcamento
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Orcamento $orcamento)
     {
@@ -199,7 +221,10 @@ class OrcamentoController extends Controller
     }
 
     /**
-     * Toggle the active status of the specified resource.
+     * Alterna o status ativo do orçamento especificado.
+     *
+     * @param  \App\Models\Orcamento  $orcamento
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function toggleStatus(Orcamento $orcamento)
     {
@@ -213,7 +238,10 @@ class OrcamentoController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove o orçamento especificado e desvincula seus serviços.
+     *
+     * @param  \App\Models\Orcamento  $orcamento
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Orcamento $orcamento)
     {
@@ -227,7 +255,10 @@ class OrcamentoController extends Controller
     }
 
     /**
-     * Print client view
+     * Exibe a visualização imprimível do orçamento especificado para o cliente.
+     *
+     * @param  \App\Models\Orcamento  $orcamento
+     * @return \Illuminate\Contracts\View\View
      */
     public function printCliente(Orcamento $orcamento)
     {
@@ -236,7 +267,10 @@ class OrcamentoController extends Controller
     }
 
     /**
-     * Print admin view
+     * Exibe a visualização imprimível administrativa do orçamento especificado com detalhes completos dos componentes.
+     *
+     * @param  \App\Models\Orcamento  $orcamento
+     * @return \Illuminate\Contracts\View\View
      */
     public function printAdmin(Orcamento $orcamento)
     {
@@ -250,7 +284,9 @@ class OrcamentoController extends Controller
     }
 
     /**
-     * Get all active services for the dropdown
+     * Obtém todos os serviços ativos com dados de disponibilidade de estoque em JSON para preenchimento de dropdown.
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getServicos()
     {

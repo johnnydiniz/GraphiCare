@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', 'App\Http\Controllers\Auth\LoginController@login')->name('login');
+Route::redirect('/', '/login');
+Route::get('/login', 'App\Http\Controllers\Auth\LoginController@login')->name('login');
 Route::post('/autenticar', 'App\Http\Controllers\Auth\LoginController@authenticate')->name('autenticar');
 Route::post('/logout', 'App\Http\Controllers\Auth\LoginController@logout')->name('sair');
 
@@ -176,6 +177,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/relatorio/ordens', 'App\Http\Controllers\RelatorioController@ordens')->name('relatorio.ordens');
     Route::get('/relatorio/financeiro', 'App\Http\Controllers\RelatorioController@financeiro')->name('relatorio.financeiro');
     Route::get('/relatorio/estoque', 'App\Http\Controllers\RelatorioController@estoque')->name('relatorio.estoque');
+
+    //Perfil
+    Route::get('/perfil', 'App\Http\Controllers\PerfilController@index')->name('perfil.index');
+    Route::put('/perfil', 'App\Http\Controllers\PerfilController@update')->name('perfil.atualizar');
+    Route::put('/perfil/senha', 'App\Http\Controllers\PerfilController@updatePassword')->name('perfil.senha');
 
     //Boletos (Contas a Pagar)
     Route::get('/boleto', 'App\Http\Controllers\BoletoController@index')->name('boleto.index');

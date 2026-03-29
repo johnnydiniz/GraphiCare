@@ -6,10 +6,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Controlador responsável pelo gerenciamento de tipos de matéria-prima.
+ *
+ * @package App\Http\Controllers
+ */
 class TipoMateriaPrimaController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Exibe a listagem do recurso.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
@@ -21,7 +28,9 @@ class TipoMateriaPrimaController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Exibe o formulário para criação de um novo recurso.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function create()
     {
@@ -30,7 +39,10 @@ class TipoMateriaPrimaController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Armazena um recurso recém-criado no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
@@ -65,7 +77,10 @@ class TipoMateriaPrimaController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Exibe o recurso especificado.
+     *
+     * @param  \App\Models\TipoMateriaPrima  $tipoMateriaPrima
+     * @return void
      */
     public function show(TipoMateriaPrima $tipoMateriaPrima)
     {
@@ -73,7 +88,10 @@ class TipoMateriaPrimaController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Exibe o formulário para edição do recurso especificado.
+     *
+     * @param  \App\Models\TipoMateriaPrima  $tipoMateriaPrima
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit(TipoMateriaPrima $tipoMateriaPrima)
     {
@@ -82,7 +100,11 @@ class TipoMateriaPrimaController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza o recurso especificado no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\TipoMateriaPrima  $tipoMateriaPrima
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, TipoMateriaPrima $tipoMateriaPrima)
     {
@@ -104,7 +126,10 @@ class TipoMateriaPrimaController extends Controller
     }
 
     /**
-     * Toggle the active status of the specified resource.
+     * Alterna o status ativo do recurso especificado.
+     *
+     * @param  \App\Models\TipoMateriaPrima  $tipoMateriaPrima
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function toggleStatus(TipoMateriaPrima $tipoMateriaPrima)
     {
@@ -118,7 +143,10 @@ class TipoMateriaPrimaController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove o recurso especificado do banco de dados.
+     *
+     * @param  \App\Models\TipoMateriaPrima  $tipoMateriaPrima
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(TipoMateriaPrima $tipoMateriaPrima)
     {
@@ -133,6 +161,12 @@ class TipoMateriaPrimaController extends Controller
         }
     }
 
+    /**
+     * Gera os campos da sessão a partir da requisição.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array<string, mixed>
+     */
     public function generateSessionFields(Request $request)
     {
         $fields = [

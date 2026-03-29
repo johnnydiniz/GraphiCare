@@ -11,10 +11,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Controller responsável pelo gerenciamento de pessoas e seus papéis relacionados.
+ *
+ * @package App\Http\Controllers
+ */
 class PessoaController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Exibe a listagem de todas as pessoas com seus papéis associados.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
@@ -25,7 +32,9 @@ class PessoaController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Exibe o formulário para cadastrar uma nova pessoa com abas de campos agrupados.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function create()
     {
@@ -49,7 +58,10 @@ class PessoaController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Armazena uma nova pessoa juntamente com registros opcionais de contato, endereço e papéis.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -221,7 +233,10 @@ class PessoaController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Exibe a pessoa especificada.
+     *
+     * @param  \App\Models\Pessoa  $pessoa
+     * @return void
      */
     public function show(Pessoa $pessoa)
     {
@@ -229,7 +244,10 @@ class PessoaController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Exibe o formulário para editar a pessoa especificada com todos os dados de papéis relacionados.
+     *
+     * @param  \App\Models\Pessoa  $pessoa
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit(Pessoa $pessoa)
     {
@@ -258,7 +276,11 @@ class PessoaController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza a pessoa especificada e cria ou atualiza registros relacionados de contato, endereço e papéis.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Pessoa  $pessoa
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Pessoa $pessoa)
     {
@@ -365,7 +387,10 @@ class PessoaController extends Controller
     }
 
     /**
-     * Toggle the active status of the specified resource.
+     * Alterna o status ativo da pessoa especificada.
+     *
+     * @param  \App\Models\Pessoa  $pessoa
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function toggleStatus(Pessoa $pessoa)
     {
@@ -379,7 +404,10 @@ class PessoaController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove a pessoa especificada e todos os papéis, contatos e endereço associados.
+     *
+     * @param  \App\Models\Pessoa  $pessoa
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Pessoa $pessoa)
     {
@@ -411,6 +439,11 @@ class PessoaController extends Controller
         }
     }
 
+    /**
+     * Obtém a configuração de abas para o formulário de pessoa.
+     *
+     * @return array<int, array{key: string, label: string, icon: string}>
+     */
     private function getFormTabs(): array
     {
         return [
@@ -423,6 +456,12 @@ class PessoaController extends Controller
         ];
     }
 
+    /**
+     * Gera um array de valores dos campos da requisição para dados flash da sessão.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array<string, mixed>
+     */
     public function generateSessionFields(Request $request)
     {
         $fields = [

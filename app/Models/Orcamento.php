@@ -5,6 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Representa um orçamento de serviços para um cliente.
+ *
+ * @package App\Models
+ * @property int $id
+ * @property bool $ativo Indica se o orçamento está ativo
+ * @property float|null $desconto Percentual de desconto aplicado
+ * @property float|null $taxa_lucro Percentual de taxa de lucro
+ * @property float|null $custo_final Custo final calculado
+ * @property float|null $valor_final Valor final calculado
+ * @property \Illuminate\Support\Carbon|null $previsao_inicio Data de previsão de início
+ * @property \Illuminate\Support\Carbon|null $previsao_entrega Data de previsão de entrega
+ * @property \Illuminate\Support\Carbon|null $validade Data de validade do orçamento
+ * @property string|null $observacoes Observações adicionais
+ * @property int $cliente_id ID do cliente associado
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ */
 class Orcamento extends Model
 {
     use HasFactory;
@@ -29,7 +47,9 @@ class Orcamento extends Model
     ];
 
     /**
-     * The relationship with Cliente
+     * Obtém o cliente associado ao orçamento.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function cliente()
     {
@@ -37,7 +57,9 @@ class Orcamento extends Model
     }
 
     /**
-     * The relationship with OrdemServico
+     * Obtém as ordens de serviço geradas a partir do orçamento.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function ordensServico()
     {
@@ -45,7 +67,9 @@ class Orcamento extends Model
     }
 
     /**
-     * The relationship with Servico
+     * Obtém os serviços vinculados ao orçamento.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function servicos()
     {
@@ -55,7 +79,9 @@ class Orcamento extends Model
     }
 
     /**
-     * Calculate the total cost based on services and their quantities
+     * Calcula o custo final com base nos serviços e suas quantidades.
+     *
+     * @return float
      */
     public function calcularCustoFinal()
     {
@@ -69,7 +95,9 @@ class Orcamento extends Model
     }
 
     /**
-     * Calculate the final value (cost + profit - discount)
+     * Calcula o valor final (custo + lucro - desconto).
+     *
+     * @return float
      */
     public function calcularValorFinal()
     {

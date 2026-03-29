@@ -8,10 +8,15 @@ use App\Models\MateriaPrima;
 use App\Models\OrdemServico;
 use Carbon\Carbon;
 
+/**
+ * Controller responsável pelo painel de controle e página inicial da aplicação.
+ *
+ * @package App\Http\Controllers
+ */
 class HomeController extends Controller
 {
     /**
-     * Create a new controller instance.
+     * Cria uma nova instância do controller.
      *
      * @return void
      */
@@ -21,9 +26,10 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the application dashboard.
+     * Exibe o painel de controle da aplicação com KPIs, resumo financeiro,
+     * ordens recentes, níveis críticos de estoque e vencimentos próximos.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {

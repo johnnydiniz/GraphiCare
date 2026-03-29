@@ -10,7 +10,7 @@
                     <div class="form-group">
                         <input id="login" name="login" type="text"
                             class="form-control form-control-custom @error('login') is-invalid @enderror"
-                            value="{{ old('login') }}" required autofocus placeholder="{{ __('Email Address') }}" />
+                            value="{{ old('login') }}" required autofocus placeholder="{{ __('Login') }}" />
                         @error('login')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>

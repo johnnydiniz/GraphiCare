@@ -5,10 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Endereco;
 use Illuminate\Http\Request;
 
+/**
+ * Gerencia operações CRUD relacionadas a endereços.
+ *
+ * @package App\Http\Controllers
+ */
 class EnderecoController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Exibe a listagem de endereços.
+     *
+     * @return void
      */
     public function index()
     {
@@ -16,7 +23,9 @@ class EnderecoController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Exibe o formulário para criação de um novo endereço.
+     *
+     * @return void
      */
     public function create()
     {
@@ -24,7 +33,10 @@ class EnderecoController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Armazena um novo endereço no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
      */
     public function store(Request $request)
     {
@@ -32,7 +44,10 @@ class EnderecoController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Exibe os detalhes de um endereço específico.
+     *
+     * @param  \App\Models\Endereco  $endereco
+     * @return void
      */
     public function show(Endereco $endereco)
     {
@@ -40,7 +55,10 @@ class EnderecoController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Exibe o formulário de edição de um endereço existente.
+     *
+     * @param  \App\Models\Endereco  $endereco
+     * @return void
      */
     public function edit(Endereco $endereco)
     {
@@ -48,7 +66,11 @@ class EnderecoController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza um endereço existente no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Endereco  $endereco
+     * @return void
      */
     public function update(Request $request, Endereco $endereco)
     {
@@ -56,7 +78,10 @@ class EnderecoController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove um endereço do banco de dados.
+     *
+     * @param  \App\Models\Endereco  $endereco
+     * @return void
      */
     public function destroy(Endereco $endereco)
     {

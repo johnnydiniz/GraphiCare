@@ -8,8 +8,18 @@ use App\Models\MateriaPrima;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Controller responsável pelo gerenciamento de perdas e quebras.
+ *
+ * @package App\Http\Controllers
+ */
 class PerdasQuebrasController extends Controller
 {
+    /**
+     * Exibe a listagem de todas as perdas e quebras.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function index()
     {
         $perdasQuebras = PerdaQuebra::with('materiaPrima')->get();
@@ -18,6 +28,11 @@ class PerdasQuebrasController extends Controller
         return view('perda-quebra.index', compact('perdasQuebras', 'title', 'route'));
     }
 
+    /**
+     * Exibe o formulário para registrar uma nova perda ou quebra.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function create()
     {
         return view('perda-quebra.formulario', [
@@ -28,6 +43,12 @@ class PerdasQuebrasController extends Controller
         ]);
     }
 
+    /**
+     * Armazena um novo registro de perda/quebra e atualiza o estoque correspondente.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -70,6 +91,12 @@ class PerdasQuebrasController extends Controller
         }
     }
 
+    /**
+     * Exibe o formulário para editar o registro de perda/quebra especificado.
+     *
+     * @param  \App\Models\PerdaQuebra  $perdaQuebra
+     * @return \Illuminate\Contracts\View\View
+     */
     public function edit(PerdaQuebra $perdaQuebra)
     {
         $perdaQuebra->load('materiaPrima');
@@ -82,6 +109,13 @@ class PerdasQuebrasController extends Controller
         ]);
     }
 
+    /**
+     * Atualiza o registro de perda/quebra especificado, revertendo e reaplicando os ajustes de estoque.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\PerdaQuebra  $perdaQuebra
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Request $request, PerdaQuebra $perdaQuebra)
     {
         $request->validate([
@@ -135,6 +169,12 @@ class PerdasQuebrasController extends Controller
         }
     }
 
+    /**
+     * Remove o registro de perda/quebra especificado e reverte a dedução do estoque.
+     *
+     * @param  \App\Models\PerdaQuebra  $perdaQuebra
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(PerdaQuebra $perdaQuebra)
     {
         try {
@@ -161,6 +201,11 @@ class PerdasQuebrasController extends Controller
         }
     }
 
+    /**
+     * Obtém todas as matérias-primas ativas em JSON para preenchimento de dropdown.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getMateriasPrimas()
     {
         $materiasPrimas = MateriaPrima::where('ativo', true)->get()->map(function ($mp) {

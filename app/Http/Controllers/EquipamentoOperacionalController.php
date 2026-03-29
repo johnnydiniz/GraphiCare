@@ -8,10 +8,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Gerencia operações CRUD e ações relacionadas a equipamentos operacionais.
+ *
+ * @package App\Http\Controllers
+ */
 class EquipamentoOperacionalController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Exibe a listagem de equipamentos operacionais.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
@@ -23,7 +30,9 @@ class EquipamentoOperacionalController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Exibe o formulário para criação de um novo equipamento operacional.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function create()
     {
@@ -32,7 +41,10 @@ class EquipamentoOperacionalController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Armazena um novo equipamento operacional no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -75,7 +87,10 @@ class EquipamentoOperacionalController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Exibe os detalhes de um equipamento operacional específico.
+     *
+     * @param  \App\Models\EquipamentoOperacional  $equipamentoOperacional
+     * @return void
      */
     public function show(EquipamentoOperacional $equipamentoOperacional)
     {
@@ -83,7 +98,10 @@ class EquipamentoOperacionalController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Exibe o formulário de edição de um equipamento operacional existente.
+     *
+     * @param  \App\Models\EquipamentoOperacional  $equipamentoOperacional
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit(EquipamentoOperacional $equipamentoOperacional)
     {
@@ -92,7 +110,11 @@ class EquipamentoOperacionalController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza um equipamento operacional existente no banco de dados.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\EquipamentoOperacional  $equipamentoOperacional
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, EquipamentoOperacional $equipamentoOperacional)
     {
@@ -131,7 +153,10 @@ class EquipamentoOperacionalController extends Controller
     }
 
     /**
-     * Toggle the active status of the specified resource.
+     * Alterna o status ativo/inativo de um equipamento operacional.
+     *
+     * @param  \App\Models\EquipamentoOperacional  $equipamentoOperacional
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function toggleStatus(EquipamentoOperacional $equipamentoOperacional)
     {
@@ -145,7 +170,10 @@ class EquipamentoOperacionalController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove um equipamento operacional do banco de dados.
+     *
+     * @param  \App\Models\EquipamentoOperacional  $equipamentoOperacional
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(EquipamentoOperacional $equipamentoOperacional)
     {
@@ -160,6 +188,12 @@ class EquipamentoOperacionalController extends Controller
         }
     }
 
+    /**
+     * Gera os campos de sessão a partir da requisição para reexibição do formulário.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array<string, mixed>
+     */
     public function generateSessionFields(Request $request)
     {
         $fields = [

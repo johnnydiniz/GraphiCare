@@ -4,12 +4,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Modelo que representa um tipo de contato (ex.: telefone, e-mail, etc.).
+ *
+ * @package App\Models
+ * @property int $id
+ * @property string $descricao Descrição do tipo de contato
+ * @property bool $ativo Indica se o tipo de contato está ativo
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ */
 class TipoContato extends Model
 {
     use HasFactory;
 
     /**
-     * The attributes that are mass assignable.
+     * Os atributos que podem ser atribuídos em massa.
      *
      * @var list<string>
      */
@@ -21,9 +31,10 @@ class TipoContato extends Model
     protected $table = 'tipo_contatos';
 
     /**
-     * The form fields to be generated
+     * Gera os campos do formulário para o recurso.
      *
-     * @var list<string>
+     * @param string $function Tipo de operação do formulário
+     * @return array<int, array<string, mixed>> Lista de campos do formulário
      */
     public function generateFields(String $function)
     {

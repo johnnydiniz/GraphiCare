@@ -1,66 +1,117 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# GraphiCare
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema de gestão para empresas gráficas, desenvolvido com Laravel e containerizado com Docker.
 
-## About Laravel
+## Sobre o Projeto
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+O GraphiCare é um ERP voltado para gráficas, cobrindo o ciclo completo de operações: desde o cadastro de clientes e fornecedores, passando por orçamentos e ordens de serviço, até o controle financeiro e de estoque.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Funcionalidades
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Cadastros** - Pessoas, clientes, funcionários, fornecedores, tipos de contato
+- **Serviços** - Serviços, componentes de serviço, equipamentos operacionais, matérias-primas
+- **Orçamentos** - Criação, impressão (cliente/admin), geração de ordens de serviço
+- **Ordens de Serviço** - Criação, acompanhamento de status, início/finalização, impressão
+- **Ordens de Compra** - Compras de matérias-primas, recebimento de materiais
+- **Financeiro** - Faturas (contas a receber), boletos (contas a pagar), fluxo de caixa
+- **Estoque** - Controle de entradas, saídas, perdas e quebras, alertas de estoque mínimo
+- **Relatórios** - Ordens de serviço, financeiro, estoque
+- **Dashboard** - KPIs, resumo financeiro, vencimentos próximos, estoque crítico
+- **Notificações** - Alertas de vencimentos e estoque crítico no header
+- **Perfil** - Edição de dados pessoais e alteração de senha
 
-## Learning Laravel
+## Requisitos
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- [Docker](https://www.docker.com/) e Docker Compose
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Instalação
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. Clone o repositório:
 
-## Laravel Sponsors
+```bash
+git clone <url-do-repositorio> GraphiCare
+cd GraphiCare
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+2. Copie o arquivo de ambiente:
 
-### Premium Partners
+```bash
+cp .env.example .env
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+3. Suba os containers:
 
-## Contributing
+```bash
+docker compose up -d --build
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+4. Instale as dependências e prepare a aplicação:
 
-## Code of Conduct
+```bash
+docker compose exec app composer install
+docker compose exec app php artisan key:generate
+docker compose exec app php artisan migrate
+docker compose exec app php artisan db:seed
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+5. Gere os caches para melhor performance:
 
-## Security Vulnerabilities
+```bash
+docker compose exec app php artisan config:cache
+docker compose exec app php artisan route:cache
+docker compose exec app php artisan view:cache
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+6. Acesse a aplicação em `http://localhost`.
 
-## License
+## Serviços Docker
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Serviço    | Porta | Descrição                  |
+|------------|-------|----------------------------|
+| Nginx      | 80    | Servidor web               |
+| Vite       | 5173  | Dev server (hot reload)    |
+| MySQL      | 3306  | Banco de dados             |
+| phpMyAdmin | 8080  | Interface do banco de dados|
+| Redis      | 6379  | Cache e sessões            |
+
+## Estrutura do Projeto
+
+```
+app/
+├── Http/
+│   └── Controllers/       # Controllers da aplicação
+│       └── Auth/           # Controllers de autenticação
+├── Models/                 # Models Eloquent
+└── Providers/              # Provedores de serviço
+config/                     # Configurações do Laravel
+database/
+├── migrations/             # Migrações do banco de dados
+└── seeders/                # Seeders
+resources/
+├── views/                  # Views Blade
+│   ├── layouts/            # Layouts e componentes reutilizáveis
+│   └── components/         # Componentes Blade
+└── sass/                   # Estilos
+routes/
+└── web.php                 # Rotas da aplicação
+```
+
+## Documentação da API (PHPDocumentor)
+
+O projeto utiliza PHPDocumentor para gerar documentação a partir dos docblocks no código-fonte.
+
+### Gerar a documentação
+
+```bash
+docker compose exec app php phpDocumentor.phar
+```
+
+A documentação será gerada em `docs/api/` e pode ser aberta no navegador.
+
+## Tecnologias
+
+- **Backend** - PHP 8.2, Laravel
+- **Frontend** - Blade, Bootstrap, Vite
+- **Banco de dados** - MySQL 8.0
+- **Cache/Sessão** - Redis
+- **Containerização** - Docker, Docker Compose
